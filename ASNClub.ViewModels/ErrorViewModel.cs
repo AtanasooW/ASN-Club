@@ -1,4 +1,4 @@
-namespace ASNClub.Models
+namespace ASNClub.ViewModels
 {
     public class ErrorViewModel
     {

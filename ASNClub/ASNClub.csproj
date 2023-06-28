@@ -15,4 +15,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.15" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ASNClub.Common\ASNClub.Common.csproj" />
+    <ProjectReference Include="..\ASNClub.Data\ASNClub.Data.csproj" />
+    <ProjectReference Include="..\ASNClub.ViewModels\ASNClub.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>

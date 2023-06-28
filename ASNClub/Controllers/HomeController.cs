@@ -1,4 +1,4 @@
-﻿using ASNClub.Models;
+﻿using ASNClub.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
