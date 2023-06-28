@@ -19,8 +19,4 @@
     <ProjectReference Include="..\ASNClub.Data.Models\ASNClub.Data.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Configurations\" />
-  </ItemGroup>
-
 </Project>
