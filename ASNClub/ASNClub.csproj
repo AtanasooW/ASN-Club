@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ASNClub.Common\ASNClub.Common.csproj" />
+    <ProjectReference Include="..\ASNClub.Data.Models\ASNClub.Data.Models.csproj" />
     <ProjectReference Include="..\ASNClub.Data\ASNClub.Data.csproj" />
     <ProjectReference Include="..\ASNClub.ViewModels\ASNClub.ViewModels.csproj" />
   </ItemGroup>

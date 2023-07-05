@@ -24,9 +24,8 @@
 
         [Required]
         [ForeignKey("Owner")]
-        public string OwnerId { get; set; } = null!;
-
-        public virtual IdentityUser Owner { get; set; } = null!;
+        public Guid OwnerId { get; set; }
+        public virtual ApplicationUser Owner { get; set; } = null!;
 
     }
 }

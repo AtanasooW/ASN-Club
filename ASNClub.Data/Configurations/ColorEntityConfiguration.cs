@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ASNClub.Data.Configurations
 {
-    public class ColorEntityConfiguration : IEntityTypeConfiguration<Color>
+    public class ColorEntityConfiguration : IEntityTypeConfiguration<Models.Product.Color>
     {
         public void Configure(EntityTypeBuilder<Color> builder)
         {
@@ -19,18 +19,18 @@ namespace ASNClub.Data.Configurations
         {
             ICollection<Color> colors = new HashSet<Color>();
 
-            Color color;
+            Models.Product.Color color;
 
             color = new Color()
             {
-                Id = 1,
+                Id = 10,
                 Name = "Black"
             };
             colors.Add(color);
 
             color = new Color()
             {
-                Id = 2,
+                Id = 20,
                 Name = "Red"
             };
             colors.Add(color);

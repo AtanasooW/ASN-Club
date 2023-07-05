@@ -3,7 +3,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static Common.EntityValidationConstants.Adress;
-    public class Adress
+    public class Address
     {
         [Key]
         public Guid Id { get; set; }

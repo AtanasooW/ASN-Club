@@ -9,27 +9,27 @@ using System.Threading.Tasks;
 
 namespace ASNClub.Data.Configurations
 {
-    internal class CategoryEntityConfiguration : IEntityTypeConfiguration<Color>
+    internal class CategoryEntityConfiguration : IEntityTypeConfiguration<Category>
     {
-        public void Configure(EntityTypeBuilder<Color> builder)
+        public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.HasData(this.GenerateCategories());
         }
 
-        private Color[] GenerateCategories()
+        private Category[] GenerateCategories()
         {
-            ICollection<Color> categories = new HashSet<Color>();
+            ICollection<Category> categories = new HashSet<Category>();
 
-            Color category;
+            Category category;
 
-            category = new Color()
+            category = new Category()
             {
                 Id = 1,
                 Name = "Wooden"
             };
             categories.Add(category);
 
-            category = new Color()
+            category = new Category()
             {
                 Id = 2,
                 Name = "Aluminum"

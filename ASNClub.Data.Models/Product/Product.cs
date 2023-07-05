@@ -18,6 +18,7 @@ namespace ASNClub.Data.Models.Product
         public int TypeId { get; set; }
         public Type Type { get; set; } = null!; //Models.Type
 
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
         [Required]
@@ -33,7 +34,7 @@ namespace ASNClub.Data.Models.Product
         [Required]
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
-        public Color Category { get; set; } = null!;
+        public Category Category { get; set; } = null!;
         public ICollection<ProductImgUrl> ImgUrls { get; set; } = new HashSet<ProductImgUrl>();
 
         [Required]
