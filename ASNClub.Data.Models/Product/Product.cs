@@ -39,6 +39,6 @@ namespace ASNClub.Data.Models.Product
         [Required]
         [ForeignKey("Color")]
         public int ColorId { get; set; }
-        public Color Color { get; set; } //Models.Color
+        public Color Color { get; set; } = null!;//Models.Color
     }
 }
