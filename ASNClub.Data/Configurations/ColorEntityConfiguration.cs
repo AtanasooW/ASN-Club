@@ -23,14 +23,14 @@ namespace ASNClub.Data.Configurations
 
             color = new Color()
             {
-                Id = 10,
+                Id = 1,
                 Name = "Black"
             };
             colors.Add(color);
 
             color = new Color()
             {
-                Id = 20,
+                Id = 2,
                 Name = "Red"
             };
             colors.Add(color);
