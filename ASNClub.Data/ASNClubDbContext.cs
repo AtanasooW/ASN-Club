@@ -1,5 +1,6 @@
 ﻿using ASNClub.Data.Models;
 using ASNClub.Data.Models.Adress;
+using ASNClub.Data.Models.Orders;
 using ASNClub.Data.Models.Product;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -29,10 +30,11 @@ namespace ASNClub.Data
         public DbSet<ProductImgUrl> ProductsImgUrls { get; set; } = null!;
         public DbSet<Models.Product.Type> Types { get; set; } = null!;
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.EnableSensitiveDataLogging();
-        //}
+        //Order
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderStatus> OrdersStatuses { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
 

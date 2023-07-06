@@ -15,5 +15,10 @@
             public const int StreetMinLength = 2;
             public const int StreetMaxLength = 50;
         }
+        public static class ShoppingCartItem
+        {
+            public const int QuantityMinCount = 1;
+            public const int QuantityMaxCount = 100;
+        }
     }
 }

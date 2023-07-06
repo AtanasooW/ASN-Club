@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -20,8 +21,9 @@ namespace ASNClub.Data.Models
             this.Id = Guid.NewGuid();
         }
 
+        [Required]
         [ForeignKey("Address")]
         public Guid AddressId { get; set; }
-        public Address Address { get; set; }
+        public Address Address { get; set; } = null!;
     }
 }
