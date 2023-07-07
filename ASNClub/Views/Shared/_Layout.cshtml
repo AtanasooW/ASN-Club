@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ASNClub.styles.css" asp-append-version="true" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://kit.fontawesome.com/a61bc5bc49.js" crossorigin="anonymous"></script>
 
@@ -47,39 +48,12 @@
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Shop" asp-action="All">Shop</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
-                               data-mdb-toggle="dropdown" aria-expanded="false"> <i class="fa-regular fa-user"></i> Profile </a>
-                            <!-- Dropdown menu -->
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <a class="dropdown-item" href="#">My account</a>
-                                </li>
-
-                                <li>
-                                    <a class="dropdown-item" href="#">Log out</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <span id="boot-icon" class="bi bi-cart" style="font-size: 25px; color: rgb(255, 255, 255);"></span>
-                         <!--<li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdownBlog" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Blog</a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownBlog">
-                                <li><a class="dropdown-item" href="blog-home.html">Blog Home</a></li>
-                                <li><a class="dropdown-item" href="blog-post.html">Blog Post</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdownPortfolio" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Portfolio</a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownPortfolio">
-                                <li><a class="dropdown-item" href="portfolio-overview.html">Portfolio Overview</a></li>
-                                <li><a class="dropdown-item" href="portfolio-item.html">Portfolio Item</a></li>
-                            </ul>
-                        </li>-->
+                        <li class="nav-item"><a class="nav-link" style="color: rgb(255, 255, 255);" asp-controller="Shop" asp-action="All"><i class="fas fa-user mx-1"></i> Profile</a></li>
+                        <a asp-controller="ShoppingCart" asp-action="Index"><span id="boot-icon" class="bi bi-cart" style="font-size: 25px; color: rgb(255, 255, 255);"></span></a>
                     </ul>
                 </div>
             </div>
-                    <partial name="_LoginPartial" />
+            <partial name="_LoginPartial" />
         </nav>
     </header>
     <div class="container">
@@ -110,5 +84,11 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            // Initialize Bootstrap dropdown
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
 </body>
 </html>

@@ -21,9 +21,8 @@ namespace ASNClub.Data.Models
             this.Id = Guid.NewGuid();
         }
 
-        [Required]
         [ForeignKey("Address")]
-        public Guid AddressId { get; set; }
-        public Address Address { get; set; } = null!;
+        public Guid? AddressId { get; set; }
+        public Address Address { get; set; }
     }
 }

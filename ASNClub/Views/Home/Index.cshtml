@@ -2,20 +2,36 @@
     ViewData["Title"] = "Home Page";
 }
 
-<!-- Header-->
 <header class="bg-dark py-5">
     <div class="container px-5">
         <div class="row gx-5 align-items-center justify-content-center">
             <div class="col-lg-8 col-xl-7 col-xxl-6">
                 <div class="my-5 text-center text-xl-start">
                     <h1 class="display-5 fw-bolder text-white mb-2">ASN Club</h1>
-                    <p class="lead fw-normal text-white-50 mb-4">Place where you can upgrade your weapon</p>
+                    <p class="lead fw-normal text-white-50 mb-4">
+                        Place where you can upgrade your weapon. We can offer you a high class parts for your gun. Only here you can restore your historical guns.
+                    </p>
                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                        <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#features">Go to the shop</a>
-                    </div>  
+                        <a class="btn btn-primary btn-lg px-4 me-sm-3" asp-controller="Shop" asp-action="All">Go to the shop</a>
+                    </div>
                 </div>
             </div>
-            <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img style="box-shadow: 2px 2px" class="img-fluid rounded-3 my-5" src="http://www.gunsgripasn.com/images/chireni/Chireni_sportna_strelba_MAGWELL-1.png" alt="Browning Mk 3 whit speacial grips" /></div>
+
+            <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
+                <div class="fullwrap">
+                   <a asp-controller="Shop" asp-action="All">
+                        <img style="filter: drop-shadow(0 0 0.75rem crimson);" src="http://www.gunsgripasn.com/images/chireni/Chireni_sportna_strelba_MAGWELL-1.png">
+                    <div class="fullcap">
+                        <h1>Go to the shop</h1>
+                    </div>
+                    </a>
+                </div>
+                <!--<a asp-controller="Shop" asp-action="All">
+                    <img style="filter: drop-shadow(0 0 0.75rem crimson);" class="img-fluid rounded-3 my-5" src="http://www.gunsgripasn.com/images/chireni/Chireni_sportna_strelba_MAGWELL-1.png" alt="Browning Mk 3 whit speacial grips" />
+                </a>-->
+            </div>
+
+
         </div>
     </div>
 </header>

@@ -37,6 +37,7 @@ namespace ASNClub.Data
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<ApplicationUser>(x => x.Property(x => x.AddressId).IsRequired(false));
 
             builder.Entity<ProductImgUrl>(x =>
             x.HasKey(x => new {x.ProductId,x.ImgUrlId})
