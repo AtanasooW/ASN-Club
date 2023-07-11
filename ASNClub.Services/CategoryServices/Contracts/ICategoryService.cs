@@ -10,5 +10,6 @@ namespace ASNClub.Services.CategoryServices.Contracts
     public interface ICategoryService
     {
         public Task<IEnumerable<ProductCategoryFormModel>> AllCategoriesAsync();
+        public Task<IEnumerable<string>> AllCategoriesNamesAsync();
     }
 }

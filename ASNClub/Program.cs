@@ -1,5 +1,7 @@
 using ASNClub.Data;
 using ASNClub.Data.Models;
+using ASNClub.Services.CategoryServices;
+using ASNClub.Services.CategoryServices.Contracts;
 using ASNClub.Services.ProductServices;
 using ASNClub.Services.ProductServices.Contracts;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +20,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ASNClubDbContext>();
 
 builder.Services.AddScoped<IProductService,ProductService>();
+builder.Services.AddScoped<ICategoryService,CategoryService>();
 
 builder.Services.AddControllersWithViews();
 
