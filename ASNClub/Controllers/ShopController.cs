@@ -1,12 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ASNClub.Services.Models;
+using ASNClub.Services.ProductServices.Contracts;
+using ASNClub.ViewModels.Product;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ASNClub.Controllers
 {
     public class ShopController : Controller
     {
-        public IActionResult All()
+        private readonly IProductService productService;
+        public ShopController(IProductService _productService)
         {
-            return View();
+            this.productService = _productService;
+        }
+        public async IActionResult All([FromQuery] AllProductQueryModel queryModel)
+        {
+            AllProductsSortedModel serviceModel = await productService.GetAllProductsAsync(queryModel);
         }
     }
 }

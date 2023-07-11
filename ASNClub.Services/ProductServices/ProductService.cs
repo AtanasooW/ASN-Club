@@ -19,6 +19,7 @@ namespace ASNClub.Services.ProductServices
         {
             IQueryable<Product> products = dbContext.Products.AsQueryable();
 
+            //TO DO The logic for model drop down and make
             if (!string.IsNullOrWhiteSpace(queryModel.Category))
             {
                 products = products.Where(x => x.Category.Name == queryModel.Category);
@@ -37,14 +38,29 @@ namespace ASNClub.Services.ProductServices
                 ProductSorting.PriceAscending => products.OrderBy(x => x.Price),
                 ProductSorting.PriceDescending => products.OrderByDescending(x => x.Price)
             };
-            return null;
-            //IEnumerable<ProductAllViewModel> allProducts = await products
-            //    .Skip((queryModel.CurrentPage - 1) * queryModel.ProductsPerPage)
-            //    .Take(queryModel.ProductsPerPage)
-            //    .Select(x => new ProductAllViewModel
-            //    {
-            //        Id = x.Id.ToString(),
-            //    })
+          
+            IEnumerable<ProductAllViewModel> allProducts = await products
+                .Skip((queryModel.CurrentPage - 1) * queryModel.ProductsPerPage)
+                .Take(queryModel.ProductsPerPage)
+                .Select(p => new ProductAllViewModel
+                {
+                    Id = p.Id.ToString(),
+                    Make = p.Make,
+                    Model = p.Model,
+                    Price = p.Price,
+                    ImgUrl = p.ImgUrls.First(x=> x.ProductId == p.Id).ImgUrl.Url,
+                    Type = p.Type.Name,
+                    Color = p.Color.Name,
+                    IsDiscount = p.Discount.IsDiscount
+
+                }).ToListAsync();
+
+            AllProductsSortedModel sortedModel = new AllProductsSortedModel()
+            {
+                Products = allProducts,
+                TotalProducts = products.Count()
+            };
+            return sortedModel;
         }
     }
 }

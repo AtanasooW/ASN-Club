@@ -1,5 +1,7 @@
 using ASNClub.Data;
 using ASNClub.Data.Models;
+using ASNClub.Services.ProductServices;
+using ASNClub.Services.ProductServices.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +16,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ASNClubDbContext>();
+
+builder.Services.AddScoped<IProductService,ProductService>();
 
 builder.Services.AddControllersWithViews();
 

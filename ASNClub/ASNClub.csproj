@@ -23,6 +23,8 @@
     <ProjectReference Include="..\ASNClub.Common\ASNClub.Common.csproj" />
     <ProjectReference Include="..\ASNClub.Data.Models\ASNClub.Data.Models.csproj" />
     <ProjectReference Include="..\ASNClub.Data\ASNClub.Data.csproj" />
+    <ProjectReference Include="..\ASNClub.Services.Models\ASNClub.Services.Models.csproj" />
+    <ProjectReference Include="..\ASNClub.Services\ASNClub.Services.csproj" />
     <ProjectReference Include="..\ASNClub.ViewModels\ASNClub.ViewModels.csproj" />
   </ItemGroup>
 
