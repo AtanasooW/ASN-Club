@@ -24,5 +24,21 @@ namespace ASNClub.Controllers
 
             return this.View(queryModel);
         }
+        [HttpGet]
+        public IActionResult Add()
+        {
+            ProductFormModel formModel = new ProductFormModel();
+            return this.View(formModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Add(ProductFormModel formModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.View(formModel);
+            }
+            await productService.AddProductAsync(formModel);
+            return RedirectToAction("All");
+        }
     }
 }

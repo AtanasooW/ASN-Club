@@ -1,30 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ASNClub.Data.Models.Product
+namespace ASNClub.ViewModels.Product
 {
-    public class Product
+    public class ProductFormModel
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         public string Make { get; set; } = null!;
         [Required]
         public string Model { get; set; } = null!;
 
         [Required]
-        [ForeignKey("Type")]
+        [Display(Name = "Type")]
         public int TypeId { get; set; }
-        public Type Type { get; set; } = null!; //Models.Type
-
+        [Required]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
         [Required]
-        [ForeignKey("Discount")]
+        [Display(Name = "Discount")]
         public int DiscountId { get; set; }
-        public Discount Discount { get; set; } = null!;
 
         [Required]
         public string Description { get; set; } = null!;
@@ -32,13 +32,12 @@ namespace ASNClub.Data.Models.Product
         public int Quantity { get; set; }
 
         [Required]
-        [ForeignKey("Category")]
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
-        public Category Category { get; set; } = null!;
-        public ICollection<ProductImgUrl> ImgUrls { get; set; } = new HashSet<ProductImgUrl>();
+        [Required]
+        public string ImgUrl { get; set; } = null!;
 
-        [ForeignKey("Color")]
+        [Display(Name = "Color")]
         public int? ColorId { get; set; }
-        public Color Color { get; set; } = null!;//Models.Color
     }
 }

@@ -4,6 +4,7 @@ using ASNClub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASNClub.Data.Migrations
 {
     [DbContext(typeof(ASNClubDbContext))]
-    partial class ASNClubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230711194500_UpdateDiscountTable")]
+    partial class UpdateDiscountTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -400,7 +402,7 @@ namespace ASNClub.Data.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ColorId")
+                    b.Property<int>("ColorId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -738,7 +740,9 @@ namespace ASNClub.Data.Migrations
 
                     b.HasOne("ASNClub.Data.Models.Product.Color", "Color")
                         .WithMany()
-                        .HasForeignKey("ColorId");
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ASNClub.Data.Models.Product.Discount", "Discount")
                         .WithMany()

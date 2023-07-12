@@ -15,6 +15,38 @@ namespace ASNClub.Services.ProductServices
         {
             this.dbContext = _dbContext;
         }
+
+        public async Task AddProductAsync(ProductFormModel formModel)
+        {
+            Product product = new Product()
+            {
+                Make = formModel.Make,
+                Model = formModel.Model,
+                Price = formModel.Price,
+                Description = formModel.Description,
+                TypeId = formModel.TypeId,
+                DiscountId = formModel.DiscountId,
+                ColorId = formModel.ColorId,
+                CategoryId = formModel.CategoryId
+            };
+            ImgUrl imgUrl = new ImgUrl()
+            {
+                Url = formModel.ImgUrl
+            };
+            await dbContext.Products.AddAsync(product);
+            await dbContext.ImgUrls.AddAsync(imgUrl);
+            await dbContext.SaveChangesAsync();
+            ProductImgUrl productImg = new ProductImgUrl()
+            {
+                ProductId = product.Id,
+                ImgUrlId = imgUrl.Id
+            };
+            await dbContext.ProductsImgUrls.AddAsync(productImg);
+            product.ImgUrls.Add(productImg);
+
+            await dbContext.SaveChangesAsync();
+        }
+
         public async Task<AllProductsSortedModel> GetAllProductsAsync(AllProductQueryModel queryModel)
         {
             IQueryable<Product> products = dbContext.Products.AsQueryable();
@@ -38,7 +70,7 @@ namespace ASNClub.Services.ProductServices
                 ProductSorting.PriceAscending => products.OrderBy(x => x.Price),
                 ProductSorting.PriceDescending => products.OrderByDescending(x => x.Price)
             };
-          
+           
             IEnumerable<ProductAllViewModel> allProducts = await products
                 .Skip((queryModel.CurrentPage - 1) * queryModel.ProductsPerPage)
                 .Take(queryModel.ProductsPerPage)
@@ -48,13 +80,12 @@ namespace ASNClub.Services.ProductServices
                     Make = p.Make,
                     Model = p.Model,
                     Price = p.Price,
-                    ImgUrl = p.ImgUrls.First(x=> x.ProductId == p.Id).ImgUrl.Url,
+                    ImgUrl = p.ImgUrls.FirstOrDefault(x => x.ProductId == p.Id).ImgUrl.Url,
                     Type = p.Type.Name,
                     Color = p.Color.Name,
                     IsDiscount = p.Discount.IsDiscount
 
                 }).ToListAsync();
-
             AllProductsSortedModel sortedModel = new AllProductsSortedModel()
             {
                 Products = allProducts,

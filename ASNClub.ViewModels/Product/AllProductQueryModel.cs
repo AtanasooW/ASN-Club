@@ -19,6 +19,8 @@ namespace ASNClub.ViewModels.Product
            this.Categories = new HashSet<string>();
 
            this.Products = new HashSet<ProductAllViewModel>();
+            this.ProductsPerPage = 16; //FIX THAT TO COMMON
+            this.CurrentPage = 1;
         }
         public string? Make { get; set; }
         public string? Model { get; set; }

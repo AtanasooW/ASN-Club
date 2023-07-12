@@ -40,6 +40,8 @@ namespace ASNClub.Data
         {
             builder.Entity<ApplicationUser>(x => x.Property(x => x.AddressId).IsRequired(false));
 
+            builder.Entity<Product>(x => x.Property(x => x.ColorId).IsRequired(false));
+
             builder.Entity<ProductImgUrl>(x =>
             x.HasKey(x => new {x.ProductId,x.ImgUrlId})
             );
