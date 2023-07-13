@@ -1,6 +1,8 @@
 ﻿using ASNClub.Services.CategoryServices.Contracts;
+using ASNClub.Services.ColorServices.Contracts;
 using ASNClub.Services.Models;
 using ASNClub.Services.ProductServices.Contracts;
+using ASNClub.Services.TypeServices.Contracts;
 using ASNClub.ViewModels.Product;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +12,14 @@ namespace ASNClub.Controllers
     {
         private readonly IProductService productService;
         private readonly ICategoryService categoryService;
-        public ShopController(IProductService _productService, ICategoryService _categoryService)
+        private readonly IColorService colorService;
+        private readonly ITypeService typeService;
+        public ShopController(IProductService _productService, ICategoryService _categoryService, IColorService _colorService, ITypeService _typeService)
         {
             this.productService = _productService;
             this.categoryService = _categoryService;
+            this.colorService = _colorService;
+            this.typeService = _typeService;
         }
         public async Task<IActionResult> All([FromQuery] AllProductQueryModel queryModel)
         {
@@ -25,9 +31,12 @@ namespace ASNClub.Controllers
             return this.View(queryModel);
         }
         [HttpGet]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
             ProductFormModel formModel = new ProductFormModel();
+            formModel.Categories = await categoryService.AllCategoriesAsync();
+            formModel.Colors = await colorService.AllColorsAsync();
+            formModel.Types = await typeService.AllTypesAsync();
             return this.View(formModel);
         }
         [HttpPost]
@@ -35,6 +44,9 @@ namespace ASNClub.Controllers
         {
             if (!ModelState.IsValid)
             {
+                formModel.Categories = await categoryService.AllCategoriesAsync();
+                formModel.Colors = await colorService.AllColorsAsync();
+                formModel.Types = await typeService.AllTypesAsync();
                 return this.View(formModel);
             }
             await productService.AddProductAsync(formModel);

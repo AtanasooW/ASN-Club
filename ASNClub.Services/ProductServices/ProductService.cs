@@ -25,10 +25,37 @@ namespace ASNClub.Services.ProductServices
                 Price = formModel.Price,
                 Description = formModel.Description,
                 TypeId = formModel.TypeId,
-                DiscountId = formModel.DiscountId,
-                ColorId = formModel.ColorId,
+                ColorId = formModel.ColorId == 1 ? null : formModel.ColorId,
                 CategoryId = formModel.CategoryId
             };
+
+            //Cheking if the discount exits. If the discount exists we place it on the product. Otherwise we make a new discount.
+            Discount? isExist = await dbContext.Discounts.FirstOrDefaultAsync(x=> x.IsDiscount == true &&
+            x.DiscountRate == formModel.Discount.DiscountRate &&
+            x.StartDate == formModel.Discount.StartDate &&
+            x.EndDate == formModel.Discount.EndDate);
+
+            if (isExist != null)
+            {
+                product.DiscountId = isExist.Id;
+            }
+            else
+            {
+                Discount discount = new Discount();
+                discount.IsDiscount = formModel.Discount.IsDiscount;
+
+                if (formModel.Discount.IsDiscount)
+                {
+                    discount.DiscountRate = formModel.Discount.DiscountRate;
+                    discount.StartDate = formModel.Discount.StartDate;
+                    discount.EndDate = formModel.Discount.EndDate;
+                }
+                await dbContext.Discounts.AddAsync(discount);
+                await dbContext.SaveChangesAsync();
+
+                product.DiscountId = discount.Id;
+            }
+          
             ImgUrl imgUrl = new ImgUrl()
             {
                 Url = formModel.ImgUrl
@@ -36,6 +63,7 @@ namespace ASNClub.Services.ProductServices
             await dbContext.Products.AddAsync(product);
             await dbContext.ImgUrls.AddAsync(imgUrl);
             await dbContext.SaveChangesAsync();
+
             ProductImgUrl productImg = new ProductImgUrl()
             {
                 ProductId = product.Id,
@@ -49,7 +77,7 @@ namespace ASNClub.Services.ProductServices
 
         public async Task<AllProductsSortedModel> GetAllProductsAsync(AllProductQueryModel queryModel)
         {
-            IQueryable<Product> products = dbContext.Products.AsQueryable();
+            IQueryable<Product> products = dbContext.Products.AsQueryable().AsNoTracking();
 
             //TO DO The logic for model drop down and make
             if (!string.IsNullOrWhiteSpace(queryModel.Category))
@@ -70,8 +98,9 @@ namespace ASNClub.Services.ProductServices
                 ProductSorting.PriceAscending => products.OrderBy(x => x.Price),
                 ProductSorting.PriceDescending => products.OrderByDescending(x => x.Price)
             };
-           
+
             IEnumerable<ProductAllViewModel> allProducts = await products
+                .AsNoTracking()
                 .Skip((queryModel.CurrentPage - 1) * queryModel.ProductsPerPage)
                 .Take(queryModel.ProductsPerPage)
                 .Select(p => new ProductAllViewModel

@@ -2,9 +2,12 @@ using ASNClub.Data;
 using ASNClub.Data.Models;
 using ASNClub.Services.CategoryServices;
 using ASNClub.Services.CategoryServices.Contracts;
+using ASNClub.Services.ColorServices;
+using ASNClub.Services.ColorServices.Contracts;
 using ASNClub.Services.ProductServices;
 using ASNClub.Services.ProductServices.Contracts;
-using Microsoft.AspNetCore.Identity;
+using ASNClub.Services.TypeServices;
+using ASNClub.Services.TypeServices.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +24,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 
 builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
+builder.Services.AddScoped<IColorService,ColorService>();
+builder.Services.AddScoped<ITypeService,TypeService>();
 
 builder.Services.AddControllersWithViews();
 

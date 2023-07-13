@@ -7,66 +7,107 @@
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
         <form method="post">
+            <!--  Make  -->
             <div class="form-group">
                 <label asp-for="Make"></label>
                 <input asp-for="Make" class="form-control" placeholder="Make...">
                 <span asp-validation-for="Make" class="small text-danger"></span>
             </div>
+            <!--  Model  -->
             <div class="form-group">
                 <label asp-for="Model"></label>
                 <input asp-for="Model" class="form-control" placeholder="Model...">
                 <span asp-validation-for="Model" class="small text-danger"></span>
             </div>
+            <!--  Description  -->
             <div class="form-group">
                 <label asp-for="Description"></label>
                 <textarea asp-for="Description" rows="4" class="form-control" placeholder="Two bedrooms..."></textarea>
                 <span asp-validation-for="Description" class="small text-danger"></span>
             </div>
+            <!--  ImgUrl  -->
             <div class="form-group">
                 <label asp-for="ImgUrl"></label>
                 <input asp-for="ImgUrl" class="form-control" placeholder="Your fine URL here...">
                 <span asp-validation-for="ImgUrl" class="small text-danger"></span>
             </div>
+            <!--  Price  -->
             <div class="form-group">
                 <label asp-for="Price"></label>
                 <input asp-for="Price" class="form-control">
                 <span asp-validation-for="Price" class="small text-danger"></span>
             </div>
+            <!--  TypeId  -->
             <div class="form-group">
                 <label asp-for="TypeId"></label>
-                <input asp-for="TypeId" class="form-control">
+                <select asp-for="TypeId" class="form-control">
+                    @foreach (var type in Model.Types)
+                    {
+                        <option value="@type.Id">@type.Name</option>
+                    }
+                </select>
                 <span asp-validation-for="TypeId" class="small text-danger"></span>
             </div>
+            <!--  DiscountId  -->
             <div class="form-group">
-                <label asp-for="DiscountId"></label>
-                <input asp-for="DiscountId" class="form-control">
-                <span asp-validation-for="DiscountId" class="small text-danger"></span>
+                <label>
+                    <input id="discountCheckbox" type="checkbox"> Add Discount
+                </label>
             </div>
+            <input type="hidden" asp-for="Discount.IsDiscount" id="isDiscountAdded">
+            <div id="discountSection" style="display: none;">
+                <div class="form-group">
+                    <label asp-for="Discount.DiscountRate"></label>
+                    <input asp-for="Discount.DiscountRate" class="form-control">
+                    <span asp-validation-for="Discount.DiscountRate" class="small text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Discount.StartDate"></label>
+                    <input asp-for="Discount.StartDate" class="form-control">
+                    <span asp-validation-for="Discount.StartDate" class="small text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Discount.EndDate"></label>
+                    <input asp-for="Discount.EndDate" class="form-control">
+                    <span asp-validation-for="Discount.EndDate" class="small text-danger"></span>
+                </div>
+            </div>
+            <!--  CategoryId  -->
             <div class="form-group">
                 <label asp-for="CategoryId"></label>
-                <input asp-for="CategoryId" class="form-control">
+                <select asp-for="CategoryId" class="form-control">
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
                 <span asp-validation-for="CategoryId" class="small text-danger"></span>
             </div>
+            <!--  ColorId  -->
             <div class="form-group">
-                <label asp-for="ColorId"></label>
-                <input asp-for="ColorId" class="form-control">
-                <span asp-validation-for="ColorId" class="small text-danger"></span>
+                <label>
+                    <input id="colorCheckbox" type="checkbox"> Add Color
+                </label>
             </div>
+            <div id="colorSection" style="display: none;">
+                <div class="form-group">
+                    <label asp-for="ColorId"></label>
+                    <select asp-for="ColorId" class="form-control">
+                        @foreach (var color in Model.Colors)
+                        {
+                            <option value="@color.Id">@color.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ColorId" class="small text-danger"></span>
+                </div>
+            </div>
+            <!--  Quantity  -->
             <div class="form-group">
                 <label asp-for="Quantity"></label>
                 <input asp-for="Quantity" class="form-control">
                 <span asp-validation-for="Quantity" class="small text-danger"></span>
             </div>
-            <!--<div class="form-group">
-                <label asp-for="CategoryId"></label>
-                <select asp-for="CategoryId" class="form-control">
-                    foreach (var category in Model.Categories)
-                    {
-                        <option value="category.Id">category.Name</option>
-                    }
-                </select>
-                <span asp-validation-for="CategoryId" class="small text-danger"></span>
-            </div>-->
+
 
             <div class="text-center">
                 <input class="btn btn-primary mt-3" type="submit" value="Save" />
@@ -74,3 +115,21 @@
         </form>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#colorCheckbox').change(function () {
+            $('#colorSection').toggle(this.checked);
+        });
+    });// TO DO Color shoud be like discount 
+</script>
+<script>
+    $(document).ready(function () {
+        $('#discountCheckbox').change(function () {
+            $('#discountSection').toggle(this.checked);
+
+            // Update the hidden input field with the checkbox's state
+            $('#isDiscountAdded').val(this.checked);
+        });
+    });
+</script>

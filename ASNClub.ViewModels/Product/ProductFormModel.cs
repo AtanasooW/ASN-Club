@@ -5,11 +5,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ASNClub.ViewModels.Category;
+using ASNClub.ViewModels.Type;
+using ASNClub.ViewModels.Color;
+using ASNClub.ViewModels.Discount;
 
 namespace ASNClub.ViewModels.Product
 {
     public class ProductFormModel
     {
+        public ProductFormModel()
+        {
+            this.Categories = new HashSet<ProductCategoryFormModel>();
+            this.Colors = new HashSet<ProductColorFormModel>();
+            this.Types = new HashSet<ProductTypeFormModel>();
+        }
         [Required]
         public string Make { get; set; } = null!;
         [Required]
@@ -18,13 +28,14 @@ namespace ASNClub.ViewModels.Product
         [Required]
         [Display(Name = "Type")]
         public int TypeId { get; set; }
+
+        public IEnumerable<ProductTypeFormModel> Types { get; set; }
         [Required]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
-        [Required]
         [Display(Name = "Discount")]
-        public int DiscountId { get; set; }
+        public ProductDiscountFormModel Discount { get; set; }
 
         [Required]
         public string Description { get; set; } = null!;
@@ -34,10 +45,14 @@ namespace ASNClub.ViewModels.Product
         [Required]
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
+
+        public IEnumerable<ProductCategoryFormModel> Categories { get; set; }
         [Required]
         public string ImgUrl { get; set; } = null!;
 
         [Display(Name = "Color")]
         public int? ColorId { get; set; }
+
+        public IEnumerable<ProductColorFormModel> Colors { get; set; }
     }
 }
