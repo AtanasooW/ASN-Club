@@ -16,50 +16,85 @@
 <!--Sorting system-->
 <form method="get">
     <div class="row">
-        <div class="form-group col-md-3 d-flex justify-content-between">
-            <div class="form-group">
-                <label asp-for="Category"></label>
-                <select asp-for="Category" class="form-control">
-                    <option value="">All</option>
-                    @foreach (var category in Model.Categories)
-                    {
-                        <option value="@category">@category</option>
-                    }
-                </select>
-            </div>
+        <div class="col-md-9">
+            <div class="form-group d-flex justify-content-between">
+                <div class="form-group">
+                    <label asp-for="Category"></label>
+                    <select asp-for="Category" class="form-select">
+                        <option value="">All</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category">@category</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Type"></label>
+                    <select asp-for="Type" class="form-select">
+                        <option value="">All</option>
+                        @foreach (var type in Model.Types)
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Make"></label>
+                    <select asp-for="Make" class="form-select" id="makeSelect">
+                        <option value="">All</option>
+                        @foreach (var make in Model.Makes)
+                        {
+                            <option value="@make">@make</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Model"></label>
+                    <select asp-for="Model" class="form-select" id="modelSelect">
+                        <option value="">All</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="ProductsPerPage"></label>
-                <select asp-for="ProductsPerPage" class="form-control">
-                    <option value="3">3</option>
-                    <option value="6">6</option>
-                    <option value="9">9</option>
-                </select>
+                <div class="form-group">
+                    <label asp-for="ProductsPerPage"></label>
+                    <select asp-for="ProductsPerPage" class="form-select">
+                        <option value="3">3</option>
+                        <option value="6">6</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <div class="form-group col-md-3">
-            <label asp-for="SearchString"></label>
-            <input asp-for="SearchString" class="form-control" placeholder="...">
-        </div>
-
-        <div class="form-group col-md-3">
-            <div class="form-group">
-                <label asp-for="ProductSorting"></label>
-                <select asp-for="ProductSorting" class="form-control">
-                    <option value="0">Price (Ascending)</option>
-                    <option value="1">Price (Descending)</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="form-group mt-4 p-2">
-                <input type="submit" value="Search" class="btn btn-primary" />
+        <div class="col-md-3 d-flex align-items-end">
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <div class="form-group">
+                        <label asp-for="SearchString"></label>
+                        <input asp-for="SearchString" class="form-control" placeholder="...">
+                    </div>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <div class="form-group">
+                        <label asp-for="ProductSorting"></label>
+                        <select asp-for="ProductSorting" class="form-select">
+                            <option value="0">Price (Ascending)</option>
+                            <option value="1">Price (Descending)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Search" class="btn btn-primary w-100" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </form>
+
+
+
 <!--Sorting system-->
 <!-- Section-->
 <div>
@@ -72,3 +107,35 @@
         </div>
     </div>
 </div>
+<script> // this not working when u press the btn
+    $(document).ready(function () {
+        
+        $("#makeSelect").change(function () {
+            var selectedMake = $(this).val();
+
+            $.ajax({
+                url: "/Shop/GetModelsByMake",
+                type: "GET",
+                data: { make: selectedMake },
+                success: function (response) {
+                    // Clear the current options in the Model dropdown
+                    $("#modelSelect").empty();
+
+                    $("#modelSelect").append('<option value="">All</option>');
+
+                    // Add the new options based on the response
+                    $.each(response, function (index, model) {
+                        $("#modelSelect").append('<option value="' + model + '">' + model + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<style>
+    .form-select {
+        width: auto;
+        max-width: 100%;
+    }
+</style>

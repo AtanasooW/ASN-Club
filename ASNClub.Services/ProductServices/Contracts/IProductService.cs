@@ -12,5 +12,7 @@ namespace ASNClub.Services.ProductServices.Contracts
     {
         public Task AddProductAsync(ProductFormModel formModel);
         public Task<AllProductsSortedModel> GetAllProductsAsync(AllProductQueryModel queryModel);
+        public Task<IEnumerable<string>> AllMakeNamesAsync();
+        public Task<IEnumerable<string>> AllModelNamesAsync(string make);
     }
 }

@@ -29,7 +29,7 @@ namespace ASNClub.Services.CategoryServices
             return categories;
         }
 
-        public async Task<IEnumerable<string>> AllCategoriesNamesAsync()
+        public async Task<IEnumerable<string>> AllCategoryNamesAsync()
         {
             IEnumerable<string> categories = await dbContext.Categories
              .AsNoTracking()

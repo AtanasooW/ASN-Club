@@ -26,10 +26,18 @@ namespace ASNClub.Controllers
             AllProductsSortedModel serviceModel = await productService.GetAllProductsAsync(queryModel);
             queryModel.Products = serviceModel.Products;
             queryModel.TotalProducts = serviceModel.TotalProducts;
-            queryModel.Categories = await categoryService.AllCategoriesNamesAsync();
-
+            queryModel.Categories = await categoryService.AllCategoryNamesAsync();
+            queryModel.Types = await typeService.AllTypeNamesAsync();
+            queryModel.Makes = await productService.AllMakeNamesAsync();
             return this.View(queryModel);
         }
+        public async Task<IActionResult> GetModelsByMake(string make)
+        {
+            var models = await productService.AllModelNamesAsync(make);
+
+            return Json(models);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Add()
         {

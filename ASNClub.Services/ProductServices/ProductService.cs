@@ -30,7 +30,7 @@ namespace ASNClub.Services.ProductServices
             };
 
             //Cheking if the discount exits. If the discount exists we place it on the product. Otherwise we make a new discount.
-            Discount? isExist = await dbContext.Discounts.FirstOrDefaultAsync(x=> x.IsDiscount == true &&
+            Discount? isExist = await dbContext.Discounts.FirstOrDefaultAsync(x => x.IsDiscount == true &&
             x.DiscountRate == formModel.Discount.DiscountRate &&
             x.StartDate == formModel.Discount.StartDate &&
             x.EndDate == formModel.Discount.EndDate);
@@ -55,7 +55,7 @@ namespace ASNClub.Services.ProductServices
 
                 product.DiscountId = discount.Id;
             }
-          
+
             ImgUrl imgUrl = new ImgUrl()
             {
                 Url = formModel.ImgUrl
@@ -83,6 +83,18 @@ namespace ASNClub.Services.ProductServices
             if (!string.IsNullOrWhiteSpace(queryModel.Category))
             {
                 products = products.Where(x => x.Category.Name == queryModel.Category);
+            }
+            if (!string.IsNullOrWhiteSpace(queryModel.Type))
+            {
+                products = products.Where(x => x.Type.Name == queryModel.Type);
+            }
+            if (!string.IsNullOrWhiteSpace(queryModel.Make))
+            {
+                products = products.Where(x => x.Make == queryModel.Make);
+            }
+            if (!string.IsNullOrWhiteSpace(queryModel.Model))
+            {
+                products = products.Where(x => x.Model == queryModel.Model);
             }
             if (!string.IsNullOrWhiteSpace(queryModel.SearchString))
             {
@@ -122,5 +134,24 @@ namespace ASNClub.Services.ProductServices
             };
             return sortedModel;
         }
+
+        public async Task<IEnumerable<string>> AllMakeNamesAsync()
+        {
+            IEnumerable<string> makes = await dbContext.Products
+               .AsNoTracking()
+               .Select(x => x.Make)
+               .ToListAsync();
+            return makes;
+        }
+        public async Task<IEnumerable<string>> AllModelNamesAsync(string make)
+        {
+            IEnumerable<string> models = await dbContext.Products
+               .AsNoTracking()
+               .Where(x=> x.Make == make)
+               .Select(x => x.Model)
+               .ToListAsync();
+            return models;
+        }
+
     }
 }
