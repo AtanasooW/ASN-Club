@@ -1,11 +1,7 @@
-﻿using ASNClub.ViewModels.Product.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+
+using ASNClub.ViewModels.Product.Enums;
+using static ASNClub.Common.ApplicationConstants;
 
 namespace ASNClub.ViewModels.Product
 {
@@ -19,8 +15,8 @@ namespace ASNClub.ViewModels.Product
            this.Categories = new HashSet<string>();
 
            this.Products = new HashSet<ProductAllViewModel>();
-            this.ProductsPerPage = 16; //FIX THAT TO COMMON
-            this.CurrentPage = 1;
+            this.ProductsPerPage = DefaultEntitiesPerPage;
+            this.CurrentPage = DefaultPage;
         }
         public string? Make { get; set; }
         public string? Model { get; set; }

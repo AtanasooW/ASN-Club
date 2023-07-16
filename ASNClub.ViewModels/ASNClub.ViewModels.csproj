@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ASNClub.Common\ASNClub.Common.csproj" />
+  </ItemGroup>
+
 </Project>

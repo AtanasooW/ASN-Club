@@ -20,7 +20,7 @@
             <div class="form-group d-flex justify-content-between">
                 <div class="form-group">
                     <label asp-for="Category"></label>
-                    <select asp-for="Category" class="form-select">
+                    <select asp-for="Category" class="form-select" id="categorySelect">
                         <option value="">All</option>
                         @foreach (var category in Model.Categories)
                         {
@@ -52,15 +52,19 @@
                     <label asp-for="Model"></label>
                     <select asp-for="Model" class="form-select" id="modelSelect">
                         <option value="">All</option>
+                        @foreach (var modelOfProduct in Model.Models)
+                        {
+                            <option value="@modelOfProduct">@modelOfProduct</option>
+                        }
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="ProductsPerPage"></label>
                     <select asp-for="ProductsPerPage" class="form-select">
-                        <option value="3">3</option>
-                        <option value="6">6</option>
-                        <option value="9">9</option>
+                        <option value="16">16</option>
+                        <option value="24">24</option>
+                        <option value="32">32</option>
                     </select>
                 </div>
             </div>
@@ -71,7 +75,7 @@
                 <div class="col-md-12 mb-2">
                     <div class="form-group">
                         <label asp-for="SearchString"></label>
-                        <input asp-for="SearchString" class="form-control" placeholder="...">
+                        <input asp-for="SearchString" class="form-control" placeholder="Walther PPK">
                     </div>
                 </div>
                 <div class="col-md-12 mb-2">
@@ -85,7 +89,7 @@
                 </div>
                 <div class="col-md-12">
                     <div class="form-group mt-4">
-                        <input type="submit" value="Search" class="btn btn-primary w-100" />
+                        <input id="submitBtn" type="submit" value="Search" class="btn btn-primary w-100" />
                     </div>
                 </div>
             </div>
@@ -107,32 +111,14 @@
         </div>
     </div>
 </div>
-<script> // this not working when u press the btn
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
     $(document).ready(function () {
-        
-        $("#makeSelect").change(function () {
-            var selectedMake = $(this).val();
-
-            $.ajax({
-                url: "/Shop/GetModelsByMake",
-                type: "GET",
-                data: { make: selectedMake },
-                success: function (response) {
-                    // Clear the current options in the Model dropdown
-                    $("#modelSelect").empty();
-
-                    $("#modelSelect").append('<option value="">All</option>');
-
-                    // Add the new options based on the response
-                    $.each(response, function (index, model) {
-                        $("#modelSelect").append('<option value="' + model + '">' + model + '</option>');
-                    });
-                }
-            });
-        });
-    });
+        $('.form-select').change(function (){
+            $('#submitBtn').click();
+        })
+    })
 </script>
-
 <style>
     .form-select {
         width: auto;

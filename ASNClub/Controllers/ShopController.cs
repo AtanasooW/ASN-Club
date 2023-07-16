@@ -29,6 +29,10 @@ namespace ASNClub.Controllers
             queryModel.Categories = await categoryService.AllCategoryNamesAsync();
             queryModel.Types = await typeService.AllTypeNamesAsync();
             queryModel.Makes = await productService.AllMakeNamesAsync();
+            if (queryModel.Make != null)
+            {
+                queryModel.Models = await productService.AllModelNamesAsync(queryModel.Make);
+            }
             return this.View(queryModel);
         }
         public async Task<IActionResult> GetModelsByMake(string make)

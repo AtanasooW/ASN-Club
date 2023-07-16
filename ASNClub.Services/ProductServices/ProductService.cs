@@ -92,18 +92,24 @@ namespace ASNClub.Services.ProductServices
             {
                 products = products.Where(x => x.Make == queryModel.Make);
             }
+            //fixing bug when model is chosen and you press all in the make drop down menu
+            if (string.IsNullOrWhiteSpace(queryModel.Make) && !string.IsNullOrWhiteSpace(queryModel.Model))
+            {
+                queryModel.Model = null;
+            }
             if (!string.IsNullOrWhiteSpace(queryModel.Model))
             {
                 products = products.Where(x => x.Model == queryModel.Model);
             }
-            if (!string.IsNullOrWhiteSpace(queryModel.SearchString))
+            if (!string.IsNullOrWhiteSpace(queryModel.SearchString)) //TO DO Search bar is worikng with only one word fix that 
             {
-                string wildCard = $"%{queryModel.SearchString.ToLower()}%";
+                string[] searchStrings = queryModel.SearchString.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                string wildCardForMake = $"%{searchStrings[0].ToLower()}%";
+                string wildCardForModel = $"%{searchStrings[1].ToLower()}%";
 
                 products = products
-                    .Where(h => EF.Functions.Like(h.Make, wildCard) ||
-                                EF.Functions.Like(h.Model, wildCard) ||
-                                EF.Functions.Like(h.Type.Name, wildCard));
+                    .Where(h => EF.Functions.Like(h.Make.ToLower(), wildCardForMake) &&
+                                EF.Functions.Like(h.Model.ToLower(), wildCardForModel));
             }
             products = queryModel.ProductSorting switch
             {
@@ -140,6 +146,7 @@ namespace ASNClub.Services.ProductServices
             IEnumerable<string> makes = await dbContext.Products
                .AsNoTracking()
                .Select(x => x.Make)
+               .Distinct()
                .ToListAsync();
             return makes;
         }
