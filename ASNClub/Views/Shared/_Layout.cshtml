@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using ASNClub.Data.Models;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -28,7 +32,10 @@
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Shop" asp-action="All">Shop</a></li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
                         <li class="nav-item"><a class="nav-link" style="color: rgb(255, 255, 255);" asp-controller="Shop" asp-action="All"><i class="fas fa-user mx-1"></i> Profile</a></li>
+                        }
                         <li class="nav-item"><a class="nav-link" style="color: rgb(255, 255, 255);" asp-controller="ShoppingCart" asp-action="Index"><i class="fa-solid fa-cart-shopping fa-lg" style="color: #ffffff;"></i> 0.00lv</a></li>
                     </ul>
                 </div>

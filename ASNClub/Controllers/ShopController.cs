@@ -35,11 +35,11 @@ namespace ASNClub.Controllers
             }
             return this.View(queryModel);
         }
-        public async Task<IActionResult> GetModelsByMake(string make)
+        public async Task<IActionResult> Details (int id)
         {
-            var models = await productService.AllModelNamesAsync(make);
+            var model = await productService.GetProductDetails(id);
 
-            return Json(models);
+            return this.View(model);
         }
 
         [HttpGet]

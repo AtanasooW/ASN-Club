@@ -14,5 +14,6 @@ namespace ASNClub.Services.ProductServices.Contracts
         public Task<AllProductsSortedModel> GetAllProductsAsync(AllProductQueryModel queryModel);
         public Task<IEnumerable<string>> AllMakeNamesAsync();
         public Task<IEnumerable<string>> AllModelNamesAsync(string make);
+        public Task<ProductDetailsViewModel> GetProductDetails(int id);
     }
 }

@@ -5,6 +5,7 @@ using ASNClub.Data;
 using ASNClub.Services.ProductServices.Contracts;
 using Microsoft.EntityFrameworkCore;
 using ASNClub.ViewModels.Product.Enums;
+using ASNClub.ViewModels.Discount;
 
 namespace ASNClub.Services.ProductServices
 {
@@ -160,5 +161,30 @@ namespace ASNClub.Services.ProductServices
             return models;
         }
 
+        public async Task<ProductDetailsViewModel> GetProductDetails(int id)
+        {
+            return await dbContext.Products
+                 .Where(x => x.Id == id)
+                 .Select(x => new ProductDetailsViewModel
+                 {
+                     Id = x.Id,
+                     Make = x.Make,
+                     Model = x.Model,
+                     Price = x.Price,
+                     Description = x.Description,
+                     Category = x.Category.Name,
+                     Type = x.Type.Name,
+                     ImgUrl = x.ImgUrls.FirstOrDefault(x => x.ProductId == id).ImgUrl.Url,
+                     Quantity = x.Quantity,
+                     Color = x.Color.Name,
+                     Discount  = new ProductDiscountFormModel()
+                     {
+                         IsDiscount = x.Discount.IsDiscount,
+                         DiscountRate = x.Discount.DiscountRate,
+                         StartDate = x.Discount.StartDate,
+                         EndDate = x.Discount.EndDate
+                     }
+                 }).FirstAsync();
+        }
     }
 }
