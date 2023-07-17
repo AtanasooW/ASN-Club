@@ -19,6 +19,7 @@ namespace ASNClub.ViewModels.Product
             this.Categories = new HashSet<ProductCategoryFormModel>();
             this.Colors = new HashSet<ProductColorFormModel>();
             this.Types = new HashSet<ProductTypeFormModel>();
+            this.ImgUrls = new List<string>();
         }
         [Required]
         public string Make { get; set; } = null!;
@@ -48,7 +49,7 @@ namespace ASNClub.ViewModels.Product
 
         public IEnumerable<ProductCategoryFormModel> Categories { get; set; }
         [Required]
-        public string ImgUrl { get; set; } = null!;
+        public List<string> ImgUrls { get; set; } = null!;
 
         [Display(Name = "Color")]
         public int? ColorId { get; set; }

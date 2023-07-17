@@ -13,7 +13,7 @@ namespace ASNClub.ViewModels.Product
     {
         public ProductDetailsViewModel()
         {
-            //this.ImgUrls = new HashSet<string>();
+            this.ImgUrls = new List<string>();
         }
         public int Id { get; set; }
         public string Make { get; set; } = null!;
@@ -24,7 +24,7 @@ namespace ASNClub.ViewModels.Product
         public string Description { get; set; } = null!;
         public int Quantity { get; set; }
         public string Category { get; set; } = null!;
-        public string ImgUrl { get; set; } //FIX IT TO COllection
+        public List<string> ImgUrls { get; set; }
         public string? Color { get; set; }
     }
 }

@@ -27,9 +27,18 @@
             </div>
             <!--  ImgUrl  -->
             <div class="form-group">
-                <label asp-for="ImgUrl"></label>
-                <input asp-for="ImgUrl" class="form-control" placeholder="Your fine URL here...">
-                <span asp-validation-for="ImgUrl" class="small text-danger"></span>
+                <label>ImgUrls</label>
+                <div id="imgUrlsContainer">
+                    @for (int i = 0; i < Model.ImgUrls.Count(); i++)
+                    {
+                        <div class="input-group mb-3">
+                            <input asp-for="ImgUrls[i]" class="form-control" placeholder="Image URL...">
+                            <button class="btn btn-outline-danger remove-imgurl" type="button"><i class="bi bi-x"></i></button>
+                        </div>
+                    }
+                </div>
+                <button class="btn btn-outline-primary add-imgurl" type="button">Add Image URL</button>
+                <span asp-validation-for="ImgUrls" class="small text-danger"></span>
             </div>
             <!--  Price  -->
             <div class="form-group">
@@ -122,14 +131,28 @@
             $('#colorSection').toggle(this.checked);
         });
     });// TO DO Color shoud be like discount 
-</script>
-<script>
+
     $(document).ready(function () {
         $('#discountCheckbox').change(function () {
             $('#discountSection').toggle(this.checked);
 
             // Update the hidden input field with the checkbox's state
             $('#isDiscountAdded').val(this.checked);
+        });
+    });
+    $(document).ready(function () {
+        // Add new input field for ImgUrl
+        $('.add-imgurl').click(function () {
+            var inputGroup = $('<div class="input-group mb-3"></div>');
+            var input = $('<input class="form-control" placeholder="Image URL...">').attr('name', 'ImgUrls').attr('type', 'text');
+            var removeButton = $('<button class="btn btn-outline-danger remove-imgurl" type="button"><i class="bi bi-x"></i></button>');
+            inputGroup.append(input).append(removeButton);
+            $('#imgUrlsContainer').append(inputGroup);
+        });
+
+        // Remove input field for ImgUrl
+        $(document).on('click', '.remove-imgurl', function () {
+            $(this).closest('.input-group').remove();
         });
     });
 </script>

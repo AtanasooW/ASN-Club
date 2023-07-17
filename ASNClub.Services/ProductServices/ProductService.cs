@@ -31,7 +31,7 @@ namespace ASNClub.Services.ProductServices
             };
 
             //Cheking if the discount exits. If the discount exists we place it on the product. Otherwise we make a new discount.
-            Discount? isExist = await dbContext.Discounts.FirstOrDefaultAsync(x => x.IsDiscount == true &&
+            Discount? isExist = await dbContext.Discounts.FirstOrDefaultAsync(x => x.IsDiscount == formModel.Discount.IsDiscount &&
             x.DiscountRate == formModel.Discount.DiscountRate &&
             x.StartDate == formModel.Discount.StartDate &&
             x.EndDate == formModel.Discount.EndDate);
@@ -56,22 +56,32 @@ namespace ASNClub.Services.ProductServices
 
                 product.DiscountId = discount.Id;
             }
-
-            ImgUrl imgUrl = new ImgUrl()
+            ICollection<ImgUrl> images = new HashSet<ImgUrl>();
+            foreach (var item in formModel.ImgUrls)
             {
-                Url = formModel.ImgUrl
-            };
+                ImgUrl imgUrl = new ImgUrl()
+                {
+                    Url = item
+                };
+                images.Add(imgUrl);
+                await dbContext.ImgUrls.AddAsync(imgUrl);
+
+            }
+
             await dbContext.Products.AddAsync(product);
-            await dbContext.ImgUrls.AddAsync(imgUrl);
             await dbContext.SaveChangesAsync();
 
-            ProductImgUrl productImg = new ProductImgUrl()
+            foreach (var item in images)
             {
-                ProductId = product.Id,
-                ImgUrlId = imgUrl.Id
-            };
-            await dbContext.ProductsImgUrls.AddAsync(productImg);
-            product.ImgUrls.Add(productImg);
+                ProductImgUrl productImg = new ProductImgUrl()
+                {
+                    ProductId = product.Id,
+                    ImgUrlId = item.Id
+                };
+                await dbContext.ProductsImgUrls.AddAsync(productImg);
+                product.ImgUrls.Add(productImg);
+
+            }
 
             await dbContext.SaveChangesAsync();
         }
@@ -155,7 +165,7 @@ namespace ASNClub.Services.ProductServices
         {
             IEnumerable<string> models = await dbContext.Products
                .AsNoTracking()
-               .Where(x=> x.Make == make)
+               .Where(x => x.Make == make)
                .Select(x => x.Model)
                .ToListAsync();
             return models;
@@ -174,10 +184,10 @@ namespace ASNClub.Services.ProductServices
                      Description = x.Description,
                      Category = x.Category.Name,
                      Type = x.Type.Name,
-                     ImgUrl = x.ImgUrls.FirstOrDefault(x => x.ProductId == id).ImgUrl.Url,
+                     ImgUrls = (List<string>)x.ImgUrls.Select(x=> x.ImgUrl.Url),
                      Quantity = x.Quantity,
                      Color = x.Color.Name,
-                     Discount  = new ProductDiscountFormModel()
+                     Discount = new ProductDiscountFormModel()
                      {
                          IsDiscount = x.Discount.IsDiscount,
                          DiscountRate = x.Discount.DiscountRate,
