@@ -30,7 +30,8 @@ namespace ASNClub.Data.Models.Product
         public string Description { get; set; } = null!;
         [Required]
         public int Quantity { get; set; }
-
+        [Required]
+        public decimal Rating { get; set; } = decimal.Zero;
         [Required]
         [ForeignKey("Category")]
         public int CategoryId { get; set; }

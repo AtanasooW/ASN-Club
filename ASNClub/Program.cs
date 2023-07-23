@@ -27,6 +27,7 @@ builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<IColorService,ColorService>();
 builder.Services.AddScoped<ITypeService,TypeService>();
 
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

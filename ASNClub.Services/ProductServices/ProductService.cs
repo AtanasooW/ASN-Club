@@ -26,6 +26,7 @@ namespace ASNClub.Services.ProductServices
                 Price = formModel.Price,
                 Description = formModel.Description,
                 TypeId = formModel.TypeId,
+                Quantity = formModel.Quantity,
                 ColorId = formModel.ColorId == 1 ? null : formModel.ColorId,
                 CategoryId = formModel.CategoryId
             };
