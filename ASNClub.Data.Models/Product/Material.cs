@@ -2,7 +2,7 @@
 
 namespace ASNClub.Data.Models.Product
 {
-    public class Category
+    public class Material
     {
         [Key]
         public int Id { get; set; }

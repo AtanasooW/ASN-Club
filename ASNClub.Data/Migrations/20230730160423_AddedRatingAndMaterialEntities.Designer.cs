@@ -4,6 +4,7 @@ using ASNClub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASNClub.Data.Migrations
 {
     [DbContext(typeof(ASNClubDbContext))]
-    partial class ASNClubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230730160423_AddedRatingAndMaterialEntities")]
+    partial class AddedRatingAndMaterialEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -488,7 +490,7 @@ namespace ASNClub.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Ratings");
+                    b.ToTable("Rating");
                 });
 
             modelBuilder.Entity("ASNClub.Data.Models.Product.Type", b =>

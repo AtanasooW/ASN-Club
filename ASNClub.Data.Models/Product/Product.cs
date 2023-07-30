@@ -28,14 +28,16 @@ namespace ASNClub.Data.Models.Product
 
         [Required]
         public string Description { get; set; } = null!;
+
         [Required]
         public int Quantity { get; set; }
+
+        public ICollection<Rating> Ratings { get; set; } = new HashSet<Rating>();
+
         [Required]
-        public decimal Rating { get; set; } = decimal.Zero;
-        [Required]
-        [ForeignKey("Category")]
-        public int CategoryId { get; set; }
-        public Category Category { get; set; } = null!;
+        [ForeignKey("Material")]
+        public int MaterialId { get; set; }
+        public Material Material { get; set; } = null!;
         public ICollection<ProductImgUrl> ImgUrls { get; set; } = new HashSet<ProductImgUrl>();
 
         [ForeignKey("Color")]

@@ -21,7 +21,7 @@ namespace ASNClub.ViewModels.Product
         public string? Make { get; set; }
         public string? Model { get; set; }
         public string? Type { get; set; }
-        public string? Category { get; set; }
+        public string? Material { get; set; }
 
         [Display(Name = "Search by text")]
         public string? SearchString { get; set; }

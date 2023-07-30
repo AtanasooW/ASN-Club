@@ -28,7 +28,7 @@ namespace ASNClub.Services.ProductServices
                 TypeId = formModel.TypeId,
                 Quantity = formModel.Quantity,
                 ColorId = formModel.ColorId == 1 ? null : formModel.ColorId,
-                CategoryId = formModel.CategoryId
+                MaterialId = formModel.CategoryId
             };
 
             //Cheking if the discount exits. If the discount exists we place it on the product. Otherwise we make a new discount.
@@ -92,9 +92,9 @@ namespace ASNClub.Services.ProductServices
             IQueryable<Product> products = dbContext.Products.AsQueryable().AsNoTracking();
 
             //TO DO The logic for model drop down and make
-            if (!string.IsNullOrWhiteSpace(queryModel.Category))
+            if (!string.IsNullOrWhiteSpace(queryModel.Material))
             {
-                products = products.Where(x => x.Category.Name == queryModel.Category);
+                products = products.Where(x => x.Material.Name == queryModel.Material);
             }
             if (!string.IsNullOrWhiteSpace(queryModel.Type))
             {
@@ -168,34 +168,61 @@ namespace ASNClub.Services.ProductServices
                .AsNoTracking()
                .Where(x => x.Make == make)
                .Select(x => x.Model)
+               .Distinct()
                .ToListAsync();
             return models;
         }
 
-        public async Task<ProductDetailsViewModel> GetProductDetails(int id)
+        public async Task<ProductDetailsViewModel?> GetProductDetails(int id)
         {
             return await dbContext.Products
-                 .Where(x => x.Id == id)
-                 .Select(x => new ProductDetailsViewModel
-                 {
-                     Id = x.Id,
-                     Make = x.Make,
-                     Model = x.Model,
-                     Price = x.Price,
-                     Description = x.Description,
-                     Category = x.Category.Name,
-                     Type = x.Type.Name,
-                     ImgUrls = (List<string>)x.ImgUrls.Select(x=> x.ImgUrl.Url),
-                     Quantity = x.Quantity,
-                     Color = x.Color.Name,
-                     Discount = new ProductDiscountFormModel()
-                     {
-                         IsDiscount = x.Discount.IsDiscount,
-                         DiscountRate = x.Discount.DiscountRate,
-                         StartDate = x.Discount.StartDate,
-                         EndDate = x.Discount.EndDate
-                     }
-                 }).FirstAsync();
+                .Where(x => x.Id == id)
+                .Include(x => x.Ratings) // Include the Ratings collection
+                .Select(x => new ProductDetailsViewModel
+                {
+                    Id = x.Id,
+                    Make = x.Make,
+                    Model = x.Model,
+                    Price = x.Price,
+                    Description = x.Description,
+                    Material = x.Material.Name,
+                    Type = x.Type.Name,
+                    Rating = x.Ratings.Count() == 0 ? 0.0 : x.Ratings.Average(r => r.RatingValue),
+                    ImgUrls = x.ImgUrls.Select(i => i.ImgUrl.Url).ToList(), // Convert to List<string>
+                    Quantity = x.Quantity,
+                    Color = x.Color.Name, // Use null-conditional operator in case Color is null
+                    Discount = new ProductDiscountFormModel
+                    {
+                        IsDiscount = x.Discount.IsDiscount,
+                        DiscountRate = x.Discount.DiscountRate,
+                        StartDate = x.Discount.StartDate,
+                        EndDate = x.Discount.EndDate
+                    }
+                }).FirstOrDefaultAsync();
+        }
+
+        public async Task AddRatingAsync(int id, int ratingValue, string? userId)
+        {
+            var rating = new Rating()
+            {
+                ProductId = id,
+                UserId = Guid.Parse(userId),
+                RatingValue = ratingValue
+            };
+            var product = await GetProductByIdAsync(id);
+            if (product == null)
+            {
+                throw new InvalidOperationException("Product doesn't exist");
+            }
+            await dbContext.Ratings.AddAsync(rating);
+            product.Ratings.Add(rating);
+            await dbContext.SaveChangesAsync();
+
+        }
+
+        public async Task<Product> GetProductByIdAsync(int id)
+        {
+            return await dbContext.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
     }
 }

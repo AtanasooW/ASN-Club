@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace ASNClub.Services.CategoryServices
 {
-    public class CategoryService : ICategoryService
+    public class MaterialService : IMaterialService
     {
         private readonly ASNClubDbContext dbContext;
-        public CategoryService(ASNClubDbContext _dbContext)
+        public MaterialService(ASNClubDbContext _dbContext)
         {
             this.dbContext = _dbContext;
         }
-        public async Task<IEnumerable<ProductCategoryFormModel>> AllCategoriesAsync()
+        public async Task<IEnumerable<ProductMaterialFormModel>> AllCategoriesAsync()
         {
-            IEnumerable<ProductCategoryFormModel> categories = await dbContext.Categories
+            IEnumerable<ProductMaterialFormModel> categories = await dbContext.Materials
                 .AsNoTracking()
-                .Select(x => new ProductCategoryFormModel
+                .Select(x => new ProductMaterialFormModel
                 {
                     Id = x.Id,
                     Name = x.Name
@@ -31,7 +31,7 @@ namespace ASNClub.Services.CategoryServices
 
         public async Task<IEnumerable<string>> AllCategoryNamesAsync()
         {
-            IEnumerable<string> categories = await dbContext.Categories
+            IEnumerable<string> categories = await dbContext.Materials
              .AsNoTracking()
              .Select(x => x.Name)
              .ToListAsync();

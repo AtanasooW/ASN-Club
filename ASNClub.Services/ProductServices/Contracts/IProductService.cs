@@ -1,4 +1,5 @@
-﻿using ASNClub.Services.Models;
+﻿using ASNClub.Data.Models.Product;
+using ASNClub.Services.Models;
 using ASNClub.ViewModels.Product;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,7 @@ namespace ASNClub.Services.ProductServices.Contracts
         public Task<IEnumerable<string>> AllMakeNamesAsync();
         public Task<IEnumerable<string>> AllModelNamesAsync(string make);
         public Task<ProductDetailsViewModel> GetProductDetails(int id);
+        public Task AddRatingAsync(int id, int ratingValue, string? userId);
+        public Task<Product> GetProductByIdAsync(int id);
     }
 }

@@ -9,30 +9,36 @@ using System.Threading.Tasks;
 
 namespace ASNClub.Data.Configurations
 {
-    internal class CategoryEntityConfiguration : IEntityTypeConfiguration<Category>
+    internal class MaterialEntityConfiguration : IEntityTypeConfiguration<Material>
     {
-        public void Configure(EntityTypeBuilder<Category> builder)
+        public void Configure(EntityTypeBuilder<Material> builder)
         {
             builder.HasData(this.GenerateCategories());
         }
 
-        private Category[] GenerateCategories()
+        private Material[] GenerateCategories()
         {
-            ICollection<Category> categories = new HashSet<Category>();
+            ICollection<Material> categories = new HashSet<Material>();
 
-            Category category;
+            Material category;
 
-            category = new Category()
+            category = new Material()
             {
                 Id = 1,
-                Name = "Wooden"
+                Name = "Wood"
             };
             categories.Add(category);
 
-            category = new Category()
+            category = new Material()
             {
                 Id = 2,
                 Name = "Aluminum"
+            };
+            categories.Add(category);
+            category = new Material()
+            {
+                Id = 3,
+                Name = "Wood and Aluminum"
             };
             categories.Add(category);
 

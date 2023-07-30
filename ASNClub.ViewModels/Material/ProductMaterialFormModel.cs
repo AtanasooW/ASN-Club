@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ASNClub.ViewModels.Category
 {
-    public class ProductCategoryFormModel
+    public class ProductMaterialFormModel
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;

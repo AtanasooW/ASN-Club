@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ASNClub.Services.CategoryServices.Contracts
 {
-    public interface ICategoryService
+    public interface IMaterialService
     {
-        public Task<IEnumerable<ProductCategoryFormModel>> AllCategoriesAsync();
+        public Task<IEnumerable<ProductMaterialFormModel>> AllCategoriesAsync();
         public Task<IEnumerable<string>> AllCategoryNamesAsync();
     }
 }

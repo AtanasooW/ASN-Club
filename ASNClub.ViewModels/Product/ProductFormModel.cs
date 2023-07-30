@@ -16,7 +16,7 @@ namespace ASNClub.ViewModels.Product
     {
         public ProductFormModel()
         {
-            this.Categories = new HashSet<ProductCategoryFormModel>();
+            this.Materials = new HashSet<ProductMaterialFormModel>();
             this.Colors = new HashSet<ProductColorFormModel>();
             this.Types = new HashSet<ProductTypeFormModel>();
             this.ImgUrls = new List<string>();
@@ -47,7 +47,7 @@ namespace ASNClub.ViewModels.Product
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
-        public IEnumerable<ProductCategoryFormModel> Categories { get; set; }
+        public IEnumerable<ProductMaterialFormModel> Materials { get; set; }
         [Required]
         public List<string> ImgUrls { get; set; } = null!;
 

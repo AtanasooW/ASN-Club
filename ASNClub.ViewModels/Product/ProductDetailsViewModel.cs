@@ -20,10 +20,11 @@ namespace ASNClub.ViewModels.Product
         public string Model { get; set; } = null!;
         public string Type { get; set; } = null!;
         public decimal Price { get; set; }
+        public double Rating { get; set; } = 0.0;
         public ProductDiscountFormModel Discount { get; set; } = null!;
         public string Description { get; set; } = null!;
         public int Quantity { get; set; }
-        public string Category { get; set; } = null!;
+        public string Material { get; set; } = null!;
         public List<string> ImgUrls { get; set; }
         public string? Color { get; set; }
     }

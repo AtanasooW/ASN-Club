@@ -4,6 +4,7 @@ using ASNClub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASNClub.Data.Migrations
 {
     [DbContext(typeof(ASNClubDbContext))]
-    partial class ASNClubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230723130612_AddedRatingForProduct")]
+    partial class AddedRatingForProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,6 +258,35 @@ namespace ASNClub.Data.Migrations
                     b.ToTable("ShoppingCartItems");
                 });
 
+            modelBuilder.Entity("ASNClub.Data.Models.Product.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Wooden"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Aluminum"
+                        });
+                });
+
             modelBuilder.Entity("ASNClub.Data.Models.Product.Color", b =>
                 {
                     b.Property<int>("Id")
@@ -365,40 +396,6 @@ namespace ASNClub.Data.Migrations
                     b.ToTable("ImgUrls");
                 });
 
-            modelBuilder.Entity("ASNClub.Data.Models.Product.Material", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Materials");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Wood"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Aluminum"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Wood and Aluminum"
-                        });
-                });
-
             modelBuilder.Entity("ASNClub.Data.Models.Product.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -406,6 +403,9 @@ namespace ASNClub.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ColorId")
                         .HasColumnType("int");
@@ -421,9 +421,6 @@ namespace ASNClub.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MaterialId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -434,16 +431,19 @@ namespace ASNClub.Data.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
+
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("ColorId");
 
                     b.HasIndex("DiscountId");
-
-                    b.HasIndex("MaterialId");
 
                     b.HasIndex("TypeId");
 
@@ -463,32 +463,6 @@ namespace ASNClub.Data.Migrations
                     b.HasIndex("ImgUrlId");
 
                     b.ToTable("ProductsImgUrls");
-                });
-
-            modelBuilder.Entity("ASNClub.Data.Models.Product.Rating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("RatingValue")
-                        .HasColumnType("float");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("ASNClub.Data.Models.Product.Type", b =>
@@ -766,6 +740,12 @@ namespace ASNClub.Data.Migrations
 
             modelBuilder.Entity("ASNClub.Data.Models.Product.Product", b =>
                 {
+                    b.HasOne("ASNClub.Data.Models.Product.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ASNClub.Data.Models.Product.Color", "Color")
                         .WithMany()
                         .HasForeignKey("ColorId");
@@ -776,23 +756,17 @@ namespace ASNClub.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASNClub.Data.Models.Product.Material", "Material")
-                        .WithMany()
-                        .HasForeignKey("MaterialId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ASNClub.Data.Models.Product.Type", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Category");
+
                     b.Navigation("Color");
 
                     b.Navigation("Discount");
-
-                    b.Navigation("Material");
 
                     b.Navigation("Type");
                 });
@@ -814,25 +788,6 @@ namespace ASNClub.Data.Migrations
                     b.Navigation("ImgUrl");
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("ASNClub.Data.Models.Product.Rating", b =>
-                {
-                    b.HasOne("ASNClub.Data.Models.Product.Product", "Product")
-                        .WithMany("Ratings")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASNClub.Data.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -894,8 +849,6 @@ namespace ASNClub.Data.Migrations
             modelBuilder.Entity("ASNClub.Data.Models.Product.Product", b =>
                 {
                     b.Navigation("ImgUrls");
-
-                    b.Navigation("Ratings");
                 });
 #pragma warning restore 612, 618
         }

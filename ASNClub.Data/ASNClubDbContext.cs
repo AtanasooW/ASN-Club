@@ -24,10 +24,11 @@ namespace ASNClub.Data
         //Product
         public DbSet<Models.Product.Color> Colors { get; set; } = null!;
         public DbSet<Comment> Comments { get; set; } = null!;
-        public DbSet<Category> Categories { get; set; } = null!;
+        public DbSet<Material> Materials { get; set; } = null!;
         public DbSet<Discount> Discounts { get; set; } = null!;
         public DbSet<ImgUrl> ImgUrls { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
+        public DbSet<Rating> Ratings { get; set; } = null!;
         public DbSet<ProductImgUrl> ProductsImgUrls { get; set; } = null!;
         public DbSet<Models.Product.Type> Types { get; set; } = null!;
 

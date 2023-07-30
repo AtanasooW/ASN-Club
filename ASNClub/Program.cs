@@ -23,7 +23,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ASNClubDbContext>();
 
 builder.Services.AddScoped<IProductService,ProductService>();
-builder.Services.AddScoped<ICategoryService,CategoryService>();
+builder.Services.AddScoped<IMaterialService,MaterialService>();
 builder.Services.AddScoped<IColorService,ColorService>();
 builder.Services.AddScoped<ITypeService,TypeService>();
 

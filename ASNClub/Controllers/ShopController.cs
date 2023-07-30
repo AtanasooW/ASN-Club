@@ -1,4 +1,5 @@
-﻿using ASNClub.Services.CategoryServices.Contracts;
+﻿using ASNClub.Infrastructure.Extensions;
+using ASNClub.Services.CategoryServices.Contracts;
 using ASNClub.Services.ColorServices.Contracts;
 using ASNClub.Services.Models;
 using ASNClub.Services.ProductServices.Contracts;
@@ -11,10 +12,10 @@ namespace ASNClub.Controllers
     public class ShopController : Controller
     {
         private readonly IProductService productService;
-        private readonly ICategoryService categoryService;
+        private readonly IMaterialService categoryService;
         private readonly IColorService colorService;
         private readonly ITypeService typeService;
-        public ShopController(IProductService _productService, ICategoryService _categoryService, IColorService _colorService, ITypeService _typeService)
+        public ShopController(IProductService _productService, IMaterialService _categoryService, IColorService _colorService, ITypeService _typeService)
         {
             this.productService = _productService;
             this.categoryService = _categoryService;
@@ -38,15 +39,20 @@ namespace ASNClub.Controllers
         public async Task<IActionResult> Details (int id)
         {
             var model = await productService.GetProductDetails(id);
-
             return this.View(model);
+        }  
+        public async Task<IActionResult> AddRating(int id, int ratingValue)
+        {
+            var userId = User.GetId();
+            await productService.AddRatingAsync(id,ratingValue, userId);
+            return RedirectToAction("Details", new{ id = id});
         }
 
         [HttpGet]
         public async Task<IActionResult> Add()
         {
             ProductFormModel formModel = new ProductFormModel();
-            formModel.Categories = await categoryService.AllCategoriesAsync();
+            formModel.Materials = await categoryService.AllCategoriesAsync();
             formModel.Colors = await colorService.AllColorsAsync();
             formModel.Types = await typeService.AllTypesAsync();
             return this.View(formModel);
@@ -56,7 +62,7 @@ namespace ASNClub.Controllers
         {
             if (!ModelState.IsValid)
             {
-                formModel.Categories = await categoryService.AllCategoriesAsync();
+                formModel.Materials = await categoryService.AllCategoriesAsync();
                 formModel.Colors = await colorService.AllColorsAsync();
                 formModel.Types = await typeService.AllTypesAsync();
                 return this.View(formModel);
