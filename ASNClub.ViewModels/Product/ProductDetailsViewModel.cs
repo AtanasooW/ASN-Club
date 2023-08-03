@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ASNClub.ViewModels.Discount;
+using ASNClub.ViewModels.Comment;
 
 namespace ASNClub.ViewModels.Product
 {
@@ -27,5 +28,6 @@ namespace ASNClub.ViewModels.Product
         public string Material { get; set; } = null!;
         public List<string> ImgUrls { get; set; }
         public string? Color { get; set; }
+        public List<CommentViewModel> Comments { get; set; } = null!;
     }
 }

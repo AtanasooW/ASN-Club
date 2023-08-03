@@ -6,6 +6,7 @@ using ASNClub.Services.ProductServices.Contracts;
 using Microsoft.EntityFrameworkCore;
 using ASNClub.ViewModels.Product.Enums;
 using ASNClub.ViewModels.Discount;
+using ASNClub.ViewModels.Comment;
 
 namespace ASNClub.Services.ProductServices
 {
@@ -191,6 +192,15 @@ namespace ASNClub.Services.ProductServices
                     ImgUrls = x.ImgUrls.Select(i => i.ImgUrl.Url).ToList(), // Convert to List<string>
                     Quantity = x.Quantity,
                     Color = x.Color.Name, // Use null-conditional operator in case Color is null
+                    Comments = x.Comments.Select(c => new CommentViewModel
+                    {
+                        Id = c.Id,
+                        PostedOn = c.PostedOn,
+                        ProductId = c.ProductId,
+                        OwnerId = c.OwnerId,
+                        OwnerName = c.OwnerName,
+                        Text = c.Text
+                    }).OrderByDescending(x=> x.PostedOn).ToList(),
                     Discount = new ProductDiscountFormModel
                     {
                         IsDiscount = x.Discount.IsDiscount,
@@ -203,6 +213,10 @@ namespace ASNClub.Services.ProductServices
 
         public async Task AddRatingAsync(int id, int ratingValue, string? userId)
         {
+            if (dbContext.Ratings.Any(x => x.UserId == Guid.Parse(userId) && x.ProductId == id))
+            {
+                throw new InvalidOperationException("Already rated");
+            }
             var rating = new Rating()
             {
                 ProductId = id,
@@ -223,6 +237,25 @@ namespace ASNClub.Services.ProductServices
         public async Task<Product> GetProductByIdAsync(int id)
         {
             return await dbContext.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task AddCommentAsync(int id, string username, string ownerId, string content)
+        {
+            //if (product == null)
+            //{
+            //    throw new InvalidOperationException("Invalid product");
+            //}//if user == null 
+            var comment = new Comment()
+            {
+                Text = content,
+                PostedOn = DateTime.Now,
+                OwnerId = Guid.Parse(ownerId),
+                OwnerName = username
+           };
+            await dbContext.Comments.AddAsync(comment);
+            var product = await dbContext.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
+            product.Comments.Add(comment);
+            await dbContext.SaveChangesAsync();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using ASNClub.Infrastructure.Extensions;
+﻿using ASNClub.Data.Models.Product;
+using ASNClub.Hubs;
+using ASNClub.Infrastructure.Extensions;
 using ASNClub.Services.CategoryServices.Contracts;
 using ASNClub.Services.ColorServices.Contracts;
 using ASNClub.Services.Models;
@@ -6,6 +8,7 @@ using ASNClub.Services.ProductServices.Contracts;
 using ASNClub.Services.TypeServices.Contracts;
 using ASNClub.ViewModels.Product;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ASNClub.Controllers
 {
@@ -15,12 +18,16 @@ namespace ASNClub.Controllers
         private readonly IMaterialService categoryService;
         private readonly IColorService colorService;
         private readonly ITypeService typeService;
-        public ShopController(IProductService _productService, IMaterialService _categoryService, IColorService _colorService, ITypeService _typeService)
+        //private readonly IHubContext<CommentsHub> commentsHubContext;
+
+        public ShopController(IHubContext<CommentsHub> _commentsHubContext,IProductService _productService, IMaterialService _categoryService, IColorService _colorService, ITypeService _typeService)
         {
             this.productService = _productService;
             this.categoryService = _categoryService;
             this.colorService = _colorService;
             this.typeService = _typeService;
+            //commentsHubContext = _commentsHubContext;
+
         }
         public async Task<IActionResult> All([FromQuery] AllProductQueryModel queryModel)
         {
@@ -47,7 +54,21 @@ namespace ASNClub.Controllers
             await productService.AddRatingAsync(id,ratingValue, userId);
             return RedirectToAction("Details", new{ id = id});
         }
-
+        public async Task<IActionResult> AddComment(int id, string username, string ownerId, string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                // You may want to handle the case where the content is null or empty.
+                // For example, you could return an error message or perform some action.
+                return BadRequest("Comment content cannot be null or empty.");
+            }
+            if (content != "COMMENT_VALUE")
+            {
+                
+               await productService.AddCommentAsync(id,username,ownerId,content);
+            }
+            return RedirectToAction("Details", new {id = id });
+        }
         [HttpGet]
         public async Task<IActionResult> Add()
         {

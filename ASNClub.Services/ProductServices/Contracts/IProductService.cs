@@ -18,5 +18,6 @@ namespace ASNClub.Services.ProductServices.Contracts
         public Task<ProductDetailsViewModel> GetProductDetails(int id);
         public Task AddRatingAsync(int id, int ratingValue, string? userId);
         public Task<Product> GetProductByIdAsync(int id);
+        public Task AddCommentAsync(int id, string username, string ownerId, string content);
     }
 }

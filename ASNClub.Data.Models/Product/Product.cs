@@ -39,6 +39,7 @@ namespace ASNClub.Data.Models.Product
         public int MaterialId { get; set; }
         public Material Material { get; set; } = null!;
         public ICollection<ProductImgUrl> ImgUrls { get; set; } = new HashSet<ProductImgUrl>();
+        public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
 
         [ForeignKey("Color")]
         public int? ColorId { get; set; }

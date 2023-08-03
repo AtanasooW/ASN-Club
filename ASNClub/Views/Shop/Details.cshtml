@@ -1,5 +1,9 @@
 ﻿@using System.Security.Claims;
+@using ASNClub.Data.Models;
+@using ASNClub.Infrastructure.Extensions;
 @using ASNClub.ViewModels.Product;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<ApplicationUser> SignInManager
 @model ProductDetailsViewModel;
 @{
     ViewBag.Title = $"{Model.Type} for {Model.Make} {Model.Model} details";
@@ -189,42 +193,51 @@
         </div>
     </div>
 </section>
-
-<h2>Rate this Product</h2>
-<form id="ratingForm" asp-controller="Shop" asp-action="AddRating" asp-route-id="@Model.Id">
-    <select name="ratingValue" class="form-select">
-        <option value="1">1 star</option>
-        <option value="2">2 stars</option>
-        <option value="3">3 stars</option>
-        <option value="4">4 stars</option>
-        <option value="5">5 stars</option>
-    </select>
-    <button type="submit" class="btn btn-outline-dark mt-2">Submit Rating</button>
-</form>
+@if (SignInManager.IsSignedIn(User))
+{
+    <h2>Rate this Product</h2>
+    <form id="ratingForm" asp-controller="Shop" asp-action="AddRating" asp-route-id="@Model.Id">
+        <select name="ratingValue" class="form-select">
+            <option value="1">1 star</option>
+            <option value="2">2 stars</option>
+            <option value="3">3 stars</option>
+            <option value="4">4 stars</option>
+            <option value="5">5 stars</option>
+        </select>
+        <button type="submit" class="btn btn-outline-dark mt-2">Submit Rating</button>
+    </form>
+}
 <div class="row d-flex justify-content-center">
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-0 border" style="background-color: #f0f2f5;">
             <div class="card-body p-4">
-
-                <form id="commentForm" asp-controller="Shop" asp-action="AddComment" asp-route-id="@Model.Id">
-                    <div class="form-outline mb-4">
-                        <h2>Comments</h2>
-                        <input type="text" name="comment" class="form-control" placeholder="Type comment..." />
-                        <div class="text-center" style="margin: 10px">
-                            <button type="submit" class="btn btn-outline-dark mt-auto">Add Comment</button>
-                        </div>
+                <form method="post">
+                <div class="form-outline mb-4">
+                    <h2>Comments</h2>
+                        <input id="commentInput" type="text" name="comment" class="form-control" placeholder="Type comment..." />
+                        <input name="content" id="helpper" style="display: none"/>
+                    <input id="usernameInput" style="display: none" value="@User.GetUsername()" />
+                    <div class="text-center" style="margin: 10px">
+                        <button asp-controller="Shop" asp-action="AddComment" asp-route-id="@Model.Id" asp-route-username="@User.GetUsername()" asp-route-ownerId="@User.GetId()" id="addComment" type="submit" class="btn btn-outline-dark mt-auto">Add Comment</button>
                     </div>
-                </form>
+                </div>
+                    <div id="commentsList">
 
-                <!-- ==================================================== -->
-                <!--Comments-->
-                <!-- ==================================================== -->
+                @foreach (var comment in Model.Comments)
+                {
+                    <partial name="_CommentPartial" model="comment"></partial>
+                }
+                </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js//CommentSingleR.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
+
 <script>
     $(document).ready(function () {
         // Trigger the elevateZoom function after the page has loaded

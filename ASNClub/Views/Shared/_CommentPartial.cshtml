@@ -1,0 +1,34 @@
+﻿@using ASNClub.Data.Models;
+@using ASNClub.Infrastructure.Extensions;
+@using ASNClub.ViewModels.Comment;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<ApplicationUser> SignInManager
+@model CommentViewModel;
+<script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p>@Model.Text</p>
+
+        <div class="d-flex justify-content-between">
+            <div class="d-flex flex-row align-items-center">
+                <p class="small mb-0 ms-2">@Model.OwnerName</p>
+            </div>
+            <div class="d-flex flex-row align-items-center">
+                <p class="small text-muted mb-0">@Model.PostedOn</p>
+            </div>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                if (Model.OwnerId == Guid.Parse(User.GetId()))
+                {
+                    <form asp-controller="Shop" asp-action="RemoveComment" asp-route-id="@Model.Id" method="post">
+                        <input type="hidden" id="commentContent" asp-route-content="@Model.Id" />
+
+                        <button type="submit" class="btn btn-outline-dark mt-auto">Delete comment</button>
+                    </form>
+                }
+            }
+
+        </div>
+    </div>
+</div>

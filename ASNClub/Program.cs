@@ -1,5 +1,6 @@
 using ASNClub.Data;
 using ASNClub.Data.Models;
+using ASNClub.Hubs;
 using ASNClub.Services.CategoryServices;
 using ASNClub.Services.CategoryServices.Contracts;
 using ASNClub.Services.ColorServices;
@@ -27,6 +28,7 @@ builder.Services.AddScoped<IMaterialService,MaterialService>();
 builder.Services.AddScoped<IColorService,ColorService>();
 builder.Services.AddScoped<ITypeService,TypeService>();
 
+builder.Services.AddSignalR();
 
 builder.Services.AddControllersWithViews();
 
@@ -56,5 +58,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
-
+app.MapHub<CommentsHub>("/commentsHub");
 app.Run();

@@ -13,5 +13,9 @@ namespace ASNClub.Infrastructure.Extensions
         {
             return user.FindFirstValue(ClaimTypes.NameIdentifier);
         }
+        public static string? GetUsername(this ClaimsPrincipal user)
+        {
+            return user.FindFirstValue(ClaimTypes.Name);
+        }
     }
 }

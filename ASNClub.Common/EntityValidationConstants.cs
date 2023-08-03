@@ -4,8 +4,8 @@
     {
         public static class Comment
         {
-            public const int TextMaxLength = 2;
-            public const int TextMinLength = 1000;
+            public const int TextMinLength = 2;
+            public const int TextMaxLength = 1000;
         }
         public static class Adress
         {
