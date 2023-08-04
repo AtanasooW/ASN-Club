@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using ASNClub.ViewModels.Product.Enums;
 using ASNClub.ViewModels.Discount;
 using ASNClub.ViewModels.Comment;
+using ASNClub.Services.ColorServices;
+using ASNClub.Services.TypeServices;
 
 namespace ASNClub.Services.ProductServices
 {
@@ -29,7 +31,7 @@ namespace ASNClub.Services.ProductServices
                 TypeId = formModel.TypeId,
                 Quantity = formModel.Quantity,
                 ColorId = formModel.ColorId == 1 ? null : formModel.ColorId,
-                MaterialId = formModel.CategoryId
+                MaterialId = formModel.MaterialId
             };
 
             //Cheking if the discount exits. If the discount exists we place it on the product. Otherwise we make a new discount.
@@ -84,6 +86,34 @@ namespace ASNClub.Services.ProductServices
                 product.ImgUrls.Add(productImg);
 
             }
+
+            await dbContext.SaveChangesAsync();
+        }
+        public async Task EditProductAsync(ProductFormModel formModel)
+        {
+            if (formModel.ColorId == 1)
+            {
+                formModel.ColorId = null;
+            }
+            var product = await GetProductByIdAsync((int)formModel.Id);
+            Discount discount = new Discount();
+            if (formModel.Discount.IsDiscount)
+            {
+                discount.IsDiscount = formModel.Discount.IsDiscount;
+                discount.DiscountRate = formModel.Discount.DiscountRate;
+                discount.StartDate = formModel.Discount.StartDate;
+                discount.EndDate = formModel.Discount.EndDate;
+            }
+
+            product.Make = formModel.Make;
+            product.Model = formModel.Model;
+            product.Price = formModel.Price;
+            product.Description = formModel.Description;
+            product.Quantity = formModel.Quantity;
+            product.TypeId = formModel.TypeId;
+            product.MaterialId = formModel.MaterialId;
+            product.ColorId = formModel.ColorId;
+            product.Discount = discount;
 
             await dbContext.SaveChangesAsync();
         }
@@ -174,7 +204,7 @@ namespace ASNClub.Services.ProductServices
             return models;
         }
 
-        public async Task<ProductDetailsViewModel?> GetProductDetails(int id)
+        public async Task<ProductDetailsViewModel?> GetProductDetailsByIdAsync(int id)
         {
             return await dbContext.Products
                 .Where(x => x.Id == id)
@@ -257,5 +287,44 @@ namespace ASNClub.Services.ProductServices
             product.Comments.Add(comment);
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task<ProductFormModel> GetProductForEditByIdAsync(int id)
+        {
+            var product = await GetProductByIdAsync(id);
+            if (product == null)
+            {
+                throw new InvalidOperationException("Invalid product");
+            }
+            ProductDiscountFormModel discountFormModel = new ProductDiscountFormModel();
+
+            if (product.Discount == null)
+            {
+                discountFormModel.IsDiscount = false;
+                
+            }
+            else
+            {
+                discountFormModel.DiscountRate = product.Discount.DiscountRate;
+                discountFormModel.StartDate = product.Discount.StartDate;
+                discountFormModel.EndDate = product.Discount.EndDate;
+            }
+
+            ProductFormModel formModel = new ProductFormModel()
+            {
+                Id = product.Id,
+                Make = product.Make,
+                Model = product.Model,
+                Price = product.Price,
+                Quantity = product.Quantity,
+                MaterialId = product.MaterialId,
+                TypeId = product.TypeId,
+                ColorId = product.ColorId,
+                Description = product.Description,
+                Discount = discountFormModel,
+                ImgUrls = await dbContext.ProductsImgUrls.Where(x=> x.ProductId == product.Id).Select(x=> x.ImgUrl.Url).ToListAsync()
+            };
+            return formModel;
+        }
+
     }
 }

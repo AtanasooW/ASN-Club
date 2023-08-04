@@ -21,6 +21,7 @@ namespace ASNClub.ViewModels.Product
             this.Types = new HashSet<ProductTypeFormModel>();
             this.ImgUrls = new List<string>();
         }
+        public int? Id { get; set; }
         [Required]
         public string Make { get; set; } = null!;
         [Required]
@@ -44,8 +45,8 @@ namespace ASNClub.ViewModels.Product
         public int Quantity { get; set; }
 
         [Required]
-        [Display(Name = "Category")]
-        public int CategoryId { get; set; }
+        [Display(Name = "Material")]
+        public int MaterialId { get; set; }
 
         public IEnumerable<ProductMaterialFormModel> Materials { get; set; }
         [Required]

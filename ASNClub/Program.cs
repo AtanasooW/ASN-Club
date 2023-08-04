@@ -9,6 +9,7 @@ using ASNClub.Services.ProductServices;
 using ASNClub.Services.ProductServices.Contracts;
 using ASNClub.Services.TypeServices;
 using ASNClub.Services.TypeServices.Contracts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<ASNClubDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ASNClubDbContext>();
 
 builder.Services.AddScoped<IProductService,ProductService>();

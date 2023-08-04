@@ -1,38 +1,40 @@
 ﻿@using ASNClub.ViewModels.Product;
 @{
-    ViewBag.Title = "Add product";
+    ViewBag.Title = "Edit product";
 }
 @model ProductFormModel
 
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
         <form method="post">
+                <input asp-for="Id" style="display:none" value="@Model.Id">
+
             <!--  Make  -->
             <div class="form-group">
                 <label asp-for="Make"></label>
-                <input asp-for="Make" class="form-control" placeholder="Make...">
+                <input asp-for="Make" class="form-control" value="@Model.Make" placeholder="Make...">
                 <span asp-validation-for="Make" class="small text-danger"></span>
             </div>
             <!--  Model  -->
             <div class="form-group">
                 <label asp-for="Model"></label>
-                <input asp-for="Model" class="form-control" placeholder="Model...">
+                <input asp-for="Model" class="form-control" value="@Model.Model" placeholder="Model...">
                 <span asp-validation-for="Model" class="small text-danger"></span>
             </div>
             <!--  Description  -->
             <div class="form-group">
                 <label asp-for="Description"></label>
-                <textarea asp-for="Description" rows="4" class="form-control" placeholder="Two bedrooms..."></textarea>
+                <textarea asp-for="Description" rows="4" class="form-control" value="@Model.Description" placeholder="Two bedrooms..."></textarea>
                 <span asp-validation-for="Description" class="small text-danger"></span>
             </div>
             <!--  ImgUrl  -->
             <div class="form-group">
                 <label>ImgUrls</label>
                 <div id="imgUrlsContainer">
-                    @for (int i = 0; i < Model.ImgUrls.Count(); i++)
+                    @for (int i = 0; i < Model.ImgUrls.Count(); i++)//ERROR _-------------
                     {
                         <div class="input-group mb-3">
-                            <input asp-for="ImgUrls[i]" class="form-control" placeholder="Image URL...">
+                            <input asp-for="ImgUrls[i]" class="form-control" value="@Model.ImgUrls[i]" placeholder="Image URL...">
                             <button class="btn btn-outline-danger remove-imgurl" type="button"><i class="bi bi-x"></i></button>
                         </div>
                     }
@@ -43,13 +45,13 @@
             <!--  Price  -->
             <div class="form-group">
                 <label asp-for="Price"></label>
-                <input asp-for="Price" class="form-control">
+                <input asp-for="Price" value="@Model.Price" class="form-control">
                 <span asp-validation-for="Price" class="small text-danger"></span>
             </div>
             <!--  TypeId  -->
             <div class="form-group">
                 <label asp-for="TypeId"></label>
-                <select asp-for="TypeId" class="form-control">
+                <select asp-for="TypeId" class="form-control" value="@Model.TypeId">
                     @foreach (var type in Model.Types)
                     {
                         <option value="@type.Id">@type.Name</option>
@@ -63,28 +65,28 @@
                     <input id="discountCheckbox" type="checkbox"> Add Discount
                 </label>
             </div>
-            <input type="hidden" asp-for="Discount.IsDiscount" id="isDiscountAdded">
+            <input type="hidden" asp-for="Discount.IsDiscount" value="@Model.Discount.IsDiscount" id="isDiscountAdded">
             <div id="discountSection" style="display: none;">
                 <div class="form-group">
                     <label asp-for="Discount.DiscountRate"></label>
-                    <input asp-for="Discount.DiscountRate" class="form-control">
+                    <input asp-for="Discount.DiscountRate" value="@Model.Discount.DiscountRate" class="form-control">
                     <span asp-validation-for="Discount.DiscountRate" class="small text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Discount.StartDate"></label>
-                    <input asp-for="Discount.StartDate" class="form-control">
+                    <input asp-for="Discount.StartDate" value="@Model.Discount.StartDate" class="form-control">
                     <span asp-validation-for="Discount.StartDate" class="small text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Discount.EndDate"></label>
-                    <input asp-for="Discount.EndDate" class="form-control">
+                    <input asp-for="Discount.EndDate" value="@Model.Discount.EndDate" class="form-control">
                     <span asp-validation-for="Discount.EndDate" class="small text-danger"></span>
                 </div>
             </div>
             <!--  CategoryId  -->
             <div class="form-group">
                 <label asp-for="MaterialId"></label>
-                <select asp-for="MaterialId" class="form-control">
+                <select asp-for="MaterialId" value="@Model.MaterialId"class="form-control">
                     @foreach (var category in Model.Materials)
                     {
                         <option value="@category.Id">@category.Name</option>
@@ -101,7 +103,7 @@
             <div id="colorSection" style="display: none;">
                 <div class="form-group">
                     <label asp-for="ColorId"></label>
-                    <select asp-for="ColorId" class="form-control">
+                    <select asp-for="ColorId" value="@Model.ColorId"class="form-control">
                         @foreach (var color in Model.Colors)
                         {
                             <option value="@color.Id">@color.Name</option>
@@ -113,7 +115,7 @@
             <!--  Quantity  -->
             <div class="form-group">
                 <label asp-for="Quantity"></label>
-                <input asp-for="Quantity" class="form-control">
+                <input asp-for="Quantity" value="@Model.Quantity" class="form-control">
                 <span asp-validation-for="Quantity" class="small text-danger"></span>
             </div>
 
@@ -130,7 +132,7 @@
         $('#colorCheckbox').change(function () {
             $('#colorSection').toggle(this.checked);
         });
-    });// TO DO Color shoud be like discount 
+    });// TO DO Color shoud be like discount
 
     $(document).ready(function () {
         $('#discountCheckbox').change(function () {

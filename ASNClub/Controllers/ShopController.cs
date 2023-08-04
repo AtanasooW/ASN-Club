@@ -45,7 +45,7 @@ namespace ASNClub.Controllers
         }
         public async Task<IActionResult> Details (int id)
         {
-            var model = await productService.GetProductDetails(id);
+            var model = await productService.GetProductDetailsByIdAsync(id);
             return this.View(model);
         }  
         public async Task<IActionResult> AddRating(int id, int ratingValue)
