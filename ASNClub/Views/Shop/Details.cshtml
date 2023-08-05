@@ -9,6 +9,12 @@
 @{
     ViewBag.Title = $"{Model.Type} for {Model.Make} {Model.Model} details";
     string url = Model.ImgUrls[0];
+    
+    var discountPrice = decimal.Zero;
+    if (Model.Discount.IsDiscount)
+    {
+        discountPrice = Model.Price - ((Model.Price * (decimal)Model.Discount.DiscountRate) / 100);
+    }
 }
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -77,6 +83,11 @@
                 <div class="border rounded-4 mb-3 d-flex justify-content-center">
                     <a id="large-image-a" data-fslightbox="mygallery" class="rounded-4" target="_blank" data-type="image" href="@url">
                         <div id="large-image-container">
+                            @if (Model.Discount.IsDiscount)
+                            {
+                                <!-- Sale badge-->
+                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                            }
                             <img id="large-image" style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="@url" />
                         </div>
                         <img id="large-image-zoom" class="zoom-image" src="@url" />
@@ -134,7 +145,16 @@
                     </div>
 
                     <div class="mb-3">
-                        <span class="h5">@Model.Price lv</span>
+                        @if (Model.Discount.IsDiscount)
+                        {
+                            <span class="text-muted text-decoration-line-through h6">@Model.Price BGN</span>
+                            <span class="h5">@discountPrice BGN</span>
+                        }
+                        else
+                        {
+                            <span class="h5">@Model.Price BGN</span>
+                            
+                        }
                     </div>
 
                     <p>@Model.Description</p>
@@ -157,7 +177,7 @@
                     <div class="row mb-4">
                         @if (Model.Color != null)
                         {
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6"><!--TO DO: Make the logic for the color :)-->
                                 <label class="mb-2">Size</label>
                                 <select class="form-select border border-secondary" style="height: 35px;">
                                     <option>Small</option>
@@ -190,7 +210,7 @@
                         <a asp-controller="Home" asp-action="Contact" class="btn btn-danger shadow-0">Ask for item</a>
                     }
 
-                    @if(User.IsInRole("Admin"))
+                    @if (User.IsInRole("Admin"))
                     {
                         <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@Model.Id" class="btn btn-warning shadow-0"> Edit </a>
 

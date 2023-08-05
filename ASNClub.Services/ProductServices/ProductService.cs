@@ -9,6 +9,7 @@ using ASNClub.ViewModels.Discount;
 using ASNClub.ViewModels.Comment;
 using ASNClub.Services.ColorServices;
 using ASNClub.Services.TypeServices;
+using System.Linq;
 
 namespace ASNClub.Services.ProductServices
 {
@@ -34,32 +35,20 @@ namespace ASNClub.Services.ProductServices
                 MaterialId = formModel.MaterialId
             };
 
-            //Cheking if the discount exits. If the discount exists we place it on the product. Otherwise we make a new discount.
-            Discount? isExist = await dbContext.Discounts.FirstOrDefaultAsync(x => x.IsDiscount == formModel.Discount.IsDiscount &&
-            x.DiscountRate == formModel.Discount.DiscountRate &&
-            x.StartDate == formModel.Discount.StartDate &&
-            x.EndDate == formModel.Discount.EndDate);
+            Discount discount = new Discount();
+            discount.IsDiscount = formModel.Discount.IsDiscount;
 
-            if (isExist != null)
+            if (formModel.Discount.IsDiscount)
             {
-                product.DiscountId = isExist.Id;
+                discount.DiscountRate = formModel.Discount.DiscountRate;
+                discount.StartDate = formModel.Discount.StartDate;
+                discount.EndDate = formModel.Discount.EndDate;
             }
-            else
-            {
-                Discount discount = new Discount();
-                discount.IsDiscount = formModel.Discount.IsDiscount;
+            await dbContext.Discounts.AddAsync(discount);
+            await dbContext.SaveChangesAsync();
 
-                if (formModel.Discount.IsDiscount)
-                {
-                    discount.DiscountRate = formModel.Discount.DiscountRate;
-                    discount.StartDate = formModel.Discount.StartDate;
-                    discount.EndDate = formModel.Discount.EndDate;
-                }
-                await dbContext.Discounts.AddAsync(discount);
-                await dbContext.SaveChangesAsync();
+            product.DiscountId = discount.Id;
 
-                product.DiscountId = discount.Id;
-            }
             ICollection<ImgUrl> images = new HashSet<ImgUrl>();
             foreach (var item in formModel.ImgUrls)
             {
@@ -96,13 +85,20 @@ namespace ASNClub.Services.ProductServices
                 formModel.ColorId = null;
             }
             var product = await GetProductByIdAsync((int)formModel.Id);
-            Discount discount = new Discount();
+
             if (formModel.Discount.IsDiscount)
             {
-                discount.IsDiscount = formModel.Discount.IsDiscount;
-                discount.DiscountRate = formModel.Discount.DiscountRate;
-                discount.StartDate = formModel.Discount.StartDate;
-                discount.EndDate = formModel.Discount.EndDate;
+                product.Discount.IsDiscount = formModel.Discount.IsDiscount;
+                product.Discount.DiscountRate = formModel.Discount.DiscountRate;
+                product.Discount.StartDate = formModel.Discount.StartDate;
+                product.Discount.EndDate = formModel.Discount.EndDate;
+            }
+            else
+            {
+                product.Discount.IsDiscount = false;
+                product.Discount.DiscountRate = null;
+                product.Discount.StartDate = null;
+                product.Discount.EndDate = null;
             }
 
             product.Make = formModel.Make;
@@ -113,7 +109,6 @@ namespace ASNClub.Services.ProductServices
             product.TypeId = formModel.TypeId;
             product.MaterialId = formModel.MaterialId;
             product.ColorId = formModel.ColorId;
-            product.Discount = discount;
 
             await dbContext.SaveChangesAsync();
         }
@@ -157,7 +152,10 @@ namespace ASNClub.Services.ProductServices
             products = queryModel.ProductSorting switch
             {
                 ProductSorting.PriceAscending => products.OrderBy(x => x.Price),
-                ProductSorting.PriceDescending => products.OrderByDescending(x => x.Price)
+                ProductSorting.PriceDescending => products.OrderByDescending(x => x.Price),
+                ProductSorting.RatingAscending => products.OrderBy(x => x.Ratings.Average(x => x.RatingValue)),
+                ProductSorting.RatingDescending => products.OrderByDescending(x => x.Ratings.Average(x => x.RatingValue)),
+                ProductSorting.Onsale => products.Where(x => x.Discount.IsDiscount)
             };
 
             IEnumerable<ProductAllViewModel> allProducts = await products
@@ -173,7 +171,9 @@ namespace ASNClub.Services.ProductServices
                     ImgUrl = p.ImgUrls.FirstOrDefault(x => x.ProductId == p.Id).ImgUrl.Url,
                     Type = p.Type.Name,
                     Color = p.Color.Name,
-                    IsDiscount = p.Discount.IsDiscount
+                    IsDiscount = p.Discount.IsDiscount,
+                    DiscountRate = p.Discount.DiscountRate,
+                    Rating = p.Ratings.Count() >= 1 ? p.Ratings.Average(x => x.RatingValue) : 0
 
                 }).ToListAsync();
             AllProductsSortedModel sortedModel = new AllProductsSortedModel()
@@ -208,7 +208,8 @@ namespace ASNClub.Services.ProductServices
         {
             return await dbContext.Products
                 .Where(x => x.Id == id)
-                .Include(x => x.Ratings) // Include the Ratings collection
+                .Include(x => x.Ratings)// Include the Ratings collection
+                .Include(x => x.Discount)
                 .Select(x => new ProductDetailsViewModel
                 {
                     Id = x.Id,
@@ -222,6 +223,13 @@ namespace ASNClub.Services.ProductServices
                     ImgUrls = x.ImgUrls.Select(i => i.ImgUrl.Url).ToList(), // Convert to List<string>
                     Quantity = x.Quantity,
                     Color = x.Color.Name, // Use null-conditional operator in case Color is null
+                    Discount = new ProductDiscountFormModel
+                    {
+                        IsDiscount = x.Discount.IsDiscount,
+                        DiscountRate = x.Discount.DiscountRate,
+                        StartDate = x.Discount.StartDate,
+                        EndDate = x.Discount.EndDate
+                    },
                     Comments = x.Comments.Select(c => new CommentViewModel
                     {
                         Id = c.Id,
@@ -230,14 +238,7 @@ namespace ASNClub.Services.ProductServices
                         OwnerId = c.OwnerId,
                         OwnerName = c.OwnerName,
                         Text = c.Text
-                    }).OrderByDescending(x=> x.PostedOn).ToList(),
-                    Discount = new ProductDiscountFormModel
-                    {
-                        IsDiscount = x.Discount.IsDiscount,
-                        DiscountRate = x.Discount.DiscountRate,
-                        StartDate = x.Discount.StartDate,
-                        EndDate = x.Discount.EndDate
-                    }
+                    }).OrderByDescending(x => x.PostedOn).ToList()
                 }).FirstOrDefaultAsync();
         }
 
@@ -266,7 +267,7 @@ namespace ASNClub.Services.ProductServices
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await dbContext.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await dbContext.Products.Include(x => x.Discount).Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task AddCommentAsync(int id, string username, string ownerId, string content)
@@ -281,7 +282,7 @@ namespace ASNClub.Services.ProductServices
                 PostedOn = DateTime.Now,
                 OwnerId = Guid.Parse(ownerId),
                 OwnerName = username
-           };
+            };
             await dbContext.Comments.AddAsync(comment);
             var product = await dbContext.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
             product.Comments.Add(comment);
@@ -300,10 +301,11 @@ namespace ASNClub.Services.ProductServices
             if (product.Discount == null)
             {
                 discountFormModel.IsDiscount = false;
-                
+
             }
             else
             {
+                discountFormModel.IsDiscount = product.Discount.IsDiscount;
                 discountFormModel.DiscountRate = product.Discount.DiscountRate;
                 discountFormModel.StartDate = product.Discount.StartDate;
                 discountFormModel.EndDate = product.Discount.EndDate;
@@ -321,7 +323,7 @@ namespace ASNClub.Services.ProductServices
                 ColorId = product.ColorId,
                 Description = product.Description,
                 Discount = discountFormModel,
-                ImgUrls = await dbContext.ProductsImgUrls.Where(x=> x.ProductId == product.Id).Select(x=> x.ImgUrl.Url).ToListAsync()
+                ImgUrls = await dbContext.ProductsImgUrls.Where(x => x.ProductId == product.Id).Select(x => x.ImgUrl.Url).ToListAsync()
             };
             return formModel;
         }

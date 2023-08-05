@@ -9,6 +9,9 @@ namespace ASNClub.ViewModels.Product.Enums
     public enum ProductSorting
     {
         PriceAscending = 0,
-        PriceDescending = 1
+        PriceDescending = 1,
+        RatingAscending = 2, 
+        RatingDescending = 3,
+        Onsale = 4
     }
 }

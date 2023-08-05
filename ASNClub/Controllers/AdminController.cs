@@ -79,6 +79,29 @@ namespace ASNClub.Controllers
             await productService.EditProductAsync(formModel);
             return RedirectToAction("All", "Shop");
         }
-
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> Add()
+        {
+            ProductFormModel formModel = new ProductFormModel();
+            formModel.Materials = await categoryService.AllCategoriesAsync();
+            formModel.Colors = await colorService.AllColorsAsync();
+            formModel.Types = await typeService.AllTypesAsync();
+            return this.View(formModel);
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Add(ProductFormModel formModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                formModel.Materials = await categoryService.AllCategoriesAsync();
+                formModel.Colors = await colorService.AllColorsAsync();
+                formModel.Types = await typeService.AllTypesAsync();
+                return this.View(formModel);
+            }
+            await productService.AddProductAsync(formModel);
+            return RedirectToAction("All");
+        }
     }
 }

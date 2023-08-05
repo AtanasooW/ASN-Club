@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
         <form method="post">
-                <input asp-for="Id" style="display:none" value="@Model.Id">
+            <input asp-for="Id" style="display:none" value="@Model.Id">
 
             <!--  Make  -->
             <div class="form-group">
@@ -62,31 +62,62 @@
             <!--  DiscountId  -->
             <div class="form-group">
                 <label>
-                    <input id="discountCheckbox" type="checkbox"> Add Discount
+                    @if (Model.Discount.IsDiscount)
+                    {
+                        <input style="display: none" id="helperForDiscount" value="checked" />
+
+                    }
+                    else
+                    {
+                        <input style="display: none" id="helperForDiscount" value="no" />
+                    }
+                    <input id="discountCheckbox" type="checkbox">Add Discount
                 </label>
             </div>
             <input type="hidden" asp-for="Discount.IsDiscount" value="@Model.Discount.IsDiscount" id="isDiscountAdded">
             <div id="discountSection" style="display: none;">
                 <div class="form-group">
-                    <label asp-for="Discount.DiscountRate"></label>
-                    <input asp-for="Discount.DiscountRate" value="@Model.Discount.DiscountRate" class="form-control">
+                    <label asp-for="Discount.DiscountRate">Discount Rate</label>
+                    <input asp-for="Discount.DiscountRate" class="form-control" value="@Model.Discount.DiscountRate" />
                     <span asp-validation-for="Discount.DiscountRate" class="small text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Discount.StartDate"></label>
-                    <input asp-for="Discount.StartDate" value="@Model.Discount.StartDate" class="form-control">
+                    <label asp-for="Discount.StartDate">Start Date</label>
+                    @{
+                        var value = string.Empty;
+                        if (Model.Discount.StartDate == null)
+                        {
+                            value = null;
+                        }
+                        else
+                        {
+                            value = Model.Discount.StartDate.Value.ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                    }
+                    <input asp-for="Discount.StartDate" class="form-control" value="@value" />
                     <span asp-validation-for="Discount.StartDate" class="small text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Discount.EndDate"></label>
-                    <input asp-for="Discount.EndDate" value="@Model.Discount.EndDate" class="form-control">
+                    <label asp-for="Discount.EndDate">End Date</label>
+                    @{
+                        var valueForEndDate = string.Empty;
+                        if (Model.Discount.StartDate == null)
+                        {
+                            valueForEndDate = null;
+                        }
+                        else
+                        {
+                            valueForEndDate = Model.Discount.EndDate.Value.ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                    }
+                    <input asp-for="Discount.EndDate" class="form-control" value="@valueForEndDate" />
                     <span asp-validation-for="Discount.EndDate" class="small text-danger"></span>
                 </div>
             </div>
             <!--  CategoryId  -->
             <div class="form-group">
                 <label asp-for="MaterialId"></label>
-                <select asp-for="MaterialId" value="@Model.MaterialId"class="form-control">
+                <select asp-for="MaterialId" value="@Model.MaterialId" class="form-control">
                     @foreach (var category in Model.Materials)
                     {
                         <option value="@category.Id">@category.Name</option>
@@ -97,13 +128,21 @@
             <!--  ColorId  -->
             <div class="form-group">
                 <label>
+                    @if (Model.ColorId != 1 && Model.ColorId != null)
+                    {
+                        <input id="helperForColor" style="display: none" value="yes">
+                    }
+                    else
+                    {
+                        <input id="helperForColor" style="display: none" value="no">
+                    }
                     <input id="colorCheckbox" type="checkbox"> Add Color
                 </label>
             </div>
             <div id="colorSection" style="display: none;">
                 <div class="form-group">
                     <label asp-for="ColorId"></label>
-                    <select asp-for="ColorId" value="@Model.ColorId"class="form-control">
+                    <select asp-for="ColorId" value="@Model.ColorId" class="form-control">
                         @foreach (var color in Model.Colors)
                         {
                             <option value="@color.Id">@color.Name</option>
@@ -128,6 +167,20 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    $(document).ready(function () {
+        var discountHelper = document.getElementById('helperForDiscount');
+        if (discountHelper.value === "checked") {
+            document.getElementById('discountCheckbox').checked = true;
+            $('#discountSection').toggle(this.checked);
+        }
+    });
+    $(document).ready(function () {
+        var colorHelper = document.getElementById('helperForColor');
+        if (colorHelper.value === "yes") {
+            document.getElementById('colorCheckbox').checked = true;
+            $('#colorSection').toggle(this.checked);
+        }
+    });
     $(document).ready(function () {
         $('#colorCheckbox').change(function () {
             $('#colorSection').toggle(this.checked);

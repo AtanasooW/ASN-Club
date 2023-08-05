@@ -1,9 +1,19 @@
 ﻿@using ASNClub.ViewModels.Product;
 @model ProductAllViewModel
-
-<!-- Normal item -->
+@{
+    var discountPrice = decimal.Zero;
+    if (Model.IsDiscount)
+    {
+        discountPrice = Model.Price - ((Model.Price * (decimal)Model.DiscountRate) / 100);
+    }
+}
 <div class="col mb-5">
     <div class="card h-100">
+        @if (Model.IsDiscount)
+        {
+            <!-- Sale badge-->
+            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+        }
         <!-- Product image-->
         <img class="card-img-top" src="@Model.ImgUrl" alt="..." />
         <!-- Product details-->
@@ -11,8 +21,31 @@
             <div class="text-center">
                 <!-- Product name-->
                 <h5 class="fw-bolder">@Model.Type For @Model.Make @Model.Model</h5>
+                <!-- Product reviews-->
+                <div class="d-flex justify-content-center small text-warning mb-2">
+                    @for (int i = 0; i < Model.Rating; i++)
+                    {
+                        <i class="fa fa-star"></i>
+                    }
+                    @if (Model.Rating % 1 > 0)
+                    {
+                        <i class="fas fa-star-half-alt"></i>
+                    }
+                    @for (int i = 0; i < 5 - Math.Ceiling((decimal)Model.Rating); i++)
+                    {
+                        <i class="far fa-star"></i>
+                    }
+                </div>
                 <!-- Product price-->
-                @Model.Price BGN
+                @if (Model.IsDiscount)
+                {
+                    <span class="text-muted text-decoration-line-through">@Model.Price BGN</span>
+                    <div>@discountPrice BGN</div>
+                }
+                else
+                {
+                    <div>@Model.Price BGN</div>
+                }
             </div>
         </div>
         <!-- Product actions-->
