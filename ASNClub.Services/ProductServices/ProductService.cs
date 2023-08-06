@@ -10,6 +10,7 @@ using ASNClub.ViewModels.Comment;
 using ASNClub.Services.ColorServices;
 using ASNClub.Services.TypeServices;
 using System.Linq;
+using ASNClub.ViewModels.Color;
 
 namespace ASNClub.Services.ProductServices
 {
@@ -206,7 +207,7 @@ namespace ASNClub.Services.ProductServices
 
         public async Task<ProductDetailsViewModel?> GetProductDetailsByIdAsync(int id)
         {
-            return await dbContext.Products
+            var product = await dbContext.Products
                 .Where(x => x.Id == id)
                 .Include(x => x.Ratings)// Include the Ratings collection
                 .Include(x => x.Discount)
@@ -219,6 +220,7 @@ namespace ASNClub.Services.ProductServices
                     Description = x.Description,
                     Material = x.Material.Name,
                     Type = x.Type.Name,
+                    TypeId = x.TypeId,
                     Rating = x.Ratings.Count() == 0 ? 0.0 : x.Ratings.Average(r => r.RatingValue),
                     ImgUrls = x.ImgUrls.Select(i => i.ImgUrl.Url).ToList(), // Convert to List<string>
                     Quantity = x.Quantity,
@@ -240,6 +242,22 @@ namespace ASNClub.Services.ProductServices
                         Text = c.Text
                     }).OrderByDescending(x => x.PostedOn).ToList()
                 }).FirstOrDefaultAsync();
+            if (product.Color == null || product.Color == "None")
+            {
+            return product;
+            }
+            var colors = await GetAllColorsForProductAsync(product.Make,product.Model, (int)product.TypeId);
+            product.Colors = colors;
+            return product;
+        }
+        public async Task<List<ColorProductIdViewModel>> GetAllColorsForProductAsync(string make, string model, int typeId)
+        {
+            return await dbContext.Products.Where(x => x.Make == make && x.Model == model && x.TypeId == typeId)
+                .Select(x => new ColorProductIdViewModel
+                {
+                   ColorName = x.Color.Name,
+                   ProductId = x.Id
+               }).ToListAsync();
         }
 
         public async Task AddRatingAsync(int id, int ratingValue, string? userId)
@@ -328,5 +346,11 @@ namespace ASNClub.Services.ProductServices
             return formModel;
         }
 
+        public async Task DeleteProductByIdAsync(int id)
+        {
+            var product = await GetProductByIdAsync(id);
+            dbContext.Products.Remove(product);
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -47,7 +47,7 @@ namespace ASNClub.Controllers
         {
             var model = await productService.GetProductDetailsByIdAsync(id);
             return this.View(model);
-        }  
+        }
         public async Task<IActionResult> AddRating(int id, int ratingValue)
         {
             var userId = User.GetId();

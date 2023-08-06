@@ -55,6 +55,11 @@ namespace ASNClub.Controllers
 
             return Ok(result);
         }
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            await productService.DeleteProductByIdAsync(id);
+            return RedirectToAction("All", "Shop");
+        }
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> EditProduct(int id)
@@ -101,7 +106,7 @@ namespace ASNClub.Controllers
                 return this.View(formModel);
             }
             await productService.AddProductAsync(formModel);
-            return RedirectToAction("All");
+            return RedirectToAction("All", "Shop");
         }
     }
 }

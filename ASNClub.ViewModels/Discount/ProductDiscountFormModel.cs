@@ -9,7 +9,7 @@ namespace ASNClub.ViewModels.Discount
 {
     public class ProductDiscountFormModel
     {
-        [Required]
+      
         public bool IsDiscount { get; set; } = false;
 
         public double? DiscountRate { get; set; }

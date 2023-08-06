@@ -179,13 +179,20 @@
                         {
                             <div class="col-md-4 col-6"><!--TO DO: Make the logic for the color :)-->
                                 <label class="mb-2">Size</label>
-                                <select class="form-select border border-secondary" style="height: 35px;">
-                                    <option>Small</option>
-                                    <option>Medium</option>
-                                    <option>Large</option>
+                                <select id="ColorSelect"class="form-select border border-secondary form-select" style="height: 35px;">
+                                   <option value="@Model.Id">@Model.Color</option>
+                                   @foreach (var color in Model.Colors)
+                                    {
+                                        if (color.ColorName != Model.Color)
+                                        {
+                                      <option value="@color.ProductId">@color.ColorName</option>
+                                        }
+                                    }
                                 </select>
                             </div>
+
                         }
+                        <a asp-controller="Shop" asp-action="Details" asp-route-id="HELP" style="display: none" id="ColorHelper"></a>
                         <!-- col.// -->
                         <div class="col-md-4 col-6 mb-3">
                             <label class="mb-2 d-block">Quantity</label>
@@ -212,7 +219,8 @@
 
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@Model.Id" class="btn btn-warning shadow-0"> Edit </a>
+                        <a id="hellper" asp-controller="Admin" asp-action="EditProduct" asp-route-id="@Model.Id" class="btn btn-warning shadow-0"> Edit </a>
+                        <a asp-controller="Admin" asp-action="DeleteProduct" asp-route-id="@Model.Id" class="btn btn-danger shadow-0">Delete</a>
 
                     }
                 </div>
@@ -269,6 +277,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
 
 <script>
+    $(document).ready(function () {
+        $('#ColorSelect').change(function () {
+            var selectedValue = $(this).val();
+            var helperLink = document.getElementById('ColorHelper');
+            var currentHref = helperLink.href;
+            var newHref = currentHref.replace("HELP", encodeURIComponent(selectedValue));
+            helperLink.setAttribute("asp-route-id", selectedValue);
+            helperLink.href = newHref;
+            helperLink.click();
+        });
+    });
+
     $(document).ready(function () {
         // Trigger the elevateZoom function after the page has loaded
         $('#large-image').elevateZoom();

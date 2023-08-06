@@ -1,5 +1,6 @@
 ﻿using ASNClub.Data.Models.Product;
 using ASNClub.Services.Models;
+using ASNClub.ViewModels.Color;
 using ASNClub.ViewModels.Product;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace ASNClub.Services.ProductServices.Contracts
     {
         public Task AddProductAsync(ProductFormModel formModel);
         public Task EditProductAsync(ProductFormModel formModel);
+        public Task DeleteProductByIdAsync(int id);
         public Task<AllProductsSortedModel> GetAllProductsAsync(AllProductQueryModel queryModel);
         public Task<IEnumerable<string>> AllMakeNamesAsync();
         public Task<IEnumerable<string>> AllModelNamesAsync(string make);
@@ -21,5 +23,6 @@ namespace ASNClub.Services.ProductServices.Contracts
         public Task<Product> GetProductByIdAsync(int id);
         public Task AddCommentAsync(int id, string username, string ownerId, string content);
         public Task<ProductFormModel> GetProductForEditByIdAsync(int id);
+        public Task<List<ColorProductIdViewModel>> GetAllColorsForProductAsync(string make, string model, int typeId);
     }
 }
