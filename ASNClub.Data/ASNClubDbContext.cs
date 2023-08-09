@@ -1,5 +1,5 @@
 ﻿using ASNClub.Data.Models;
-using ASNClub.Data.Models.Adress;
+using ASNClub.Data.Models.AddressModels;
 using ASNClub.Data.Models.Orders;
 using ASNClub.Data.Models.Product;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +19,7 @@ namespace ASNClub.Data
         }
         //Address
         public DbSet<Address> Addresses { get; set; } = null!;
+        public DbSet<UserAddress> UsersAddresses { get; set; } = null!;
         public DbSet<Country> Countries { get; set; } = null!;
 
         //Product
@@ -39,13 +40,11 @@ namespace ASNClub.Data
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<ApplicationUser>(x => x.Property(x => x.AddressId).IsRequired(false));
 
             builder.Entity<Product>(x => x.Property(x => x.ColorId).IsRequired(false));
 
-            builder.Entity<ProductImgUrl>(x =>
-            x.HasKey(x => new {x.ProductId,x.ImgUrlId})
-            );
+            builder.Entity<ProductImgUrl>(x =>x.HasKey(x => new {x.ProductId,x.ImgUrlId}));
+            builder.Entity<UserAddress>(x =>x.HasKey(x => new {x.AddressId,x.UserId}));
 
             Assembly configAssembly = Assembly.GetAssembly(typeof(ASNClubDbContext)) ??
                                       Assembly.GetExecutingAssembly();

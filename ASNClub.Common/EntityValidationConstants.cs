@@ -20,5 +20,13 @@
             public const int QuantityMinCount = 1;
             public const int QuantityMaxCount = 100;
         }
+        public static class User
+        {
+            public const int FirstNameMinLength = 1;
+            public const int FirstNameMaxLength = 16;
+
+            public const int SurNameMinLength = 1;
+            public const int SurNameMaxLength = 16;
+        }
     }
 }

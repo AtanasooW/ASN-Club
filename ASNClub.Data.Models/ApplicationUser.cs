@@ -1,12 +1,8 @@
-﻿using ASNClub.Data.Models.Adress;
+﻿using ASNClub.Data.Models.AddressModels;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static ASNClub.Common.EntityValidationConstants.User;
+
 
 namespace ASNClub.Data.Models
 {
@@ -20,9 +16,11 @@ namespace ASNClub.Data.Models
         {
             this.Id = Guid.NewGuid();
         }
+        [StringLength(FirstNameMaxLength, MinimumLength = FirstNameMinLength)]
 
-        [ForeignKey("Address")]
-        public Guid? AddressId { get; set; }
-        public Address Address { get; set; }
+        public string? FirstName { get; set; }
+        [StringLength(SurNameMaxLength, MinimumLength = SurNameMinLength)]
+        public string? SurnameName { get; set; }
+        public ICollection<UserAddress> UserAddresses { get; set; } = new HashSet<UserAddress>();
     }
 }

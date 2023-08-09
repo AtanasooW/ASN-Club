@@ -1,12 +1,18 @@
 using ASNClub.Data;
 using ASNClub.Data.Models;
 using ASNClub.Hubs;
+using ASNClub.Services.AddressServices;
+using ASNClub.Services.AddressServices.Contracts;
 using ASNClub.Services.CategoryServices;
 using ASNClub.Services.CategoryServices.Contracts;
 using ASNClub.Services.ColorServices;
 using ASNClub.Services.ColorServices.Contracts;
+using ASNClub.Services.CountyServices;
+using ASNClub.Services.CountyServices.Contracts;
 using ASNClub.Services.ProductServices;
 using ASNClub.Services.ProductServices.Contracts;
+using ASNClub.Services.ProfileServices;
+using ASNClub.Services.ProfileServices.Contracts;
 using ASNClub.Services.TypeServices;
 using ASNClub.Services.TypeServices.Contracts;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +35,9 @@ builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<IMaterialService,MaterialService>();
 builder.Services.AddScoped<IColorService,ColorService>();
 builder.Services.AddScoped<ITypeService,TypeService>();
+builder.Services.AddScoped<IProfileService,ProfileService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<ICountryService, CountryService>();
 
 builder.Services.AddSignalR();
 

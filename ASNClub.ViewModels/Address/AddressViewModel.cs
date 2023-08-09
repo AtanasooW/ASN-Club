@@ -1,13 +1,19 @@
-﻿namespace ASNClub.Data.Models.Adress
-{
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using static Common.EntityValidationConstants.Adress;
-    public class Address
-    {
-        [Key]
-        public Guid Id { get; set; }
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static ASNClub.Common.EntityValidationConstants.Adress;
+using ASNClub.ViewModels.Country;
 
+namespace ASNClub.ViewModels.Address
+{
+    public class AddressViewModel
+    {
+        public Guid Id { get; set; }
+        public bool IsDefault { get; set; }
         [Required]
         [StringLength(CityMaxLength, MinimumLength = CityMinLength)]
         public string City { get; set; } = null!;
@@ -25,10 +31,8 @@
         [Required]
         public string PostalCode { get; set; } = null!;
 
-        [Required]
-        [ForeignKey("Country")]
         public int CountryId { get; set; }
-        public Country Country { get; set; } = null!;
-
+        public string? Country { get; set; }
+        public ICollection<CountryViewModel> Countries { get; set; } = new HashSet<CountryViewModel>();
     }
 }

@@ -4,6 +4,7 @@ using ASNClub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASNClub.Data.Migrations
 {
     [DbContext(typeof(ASNClubDbContext))]
-    partial class ASNClubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230809133209_AddedIsDefaultColummToAddress")]
+    partial class AddedIsDefaultColummToAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,7 +111,7 @@ namespace ASNClub.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UsersAddresses");
+                    b.ToTable("UserAddress");
                 });
 
             modelBuilder.Entity("ASNClub.Data.Models.ApplicationUser", b =>
@@ -131,9 +133,6 @@ namespace ASNClub.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -159,9 +158,6 @@ namespace ASNClub.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SurnameName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")

@@ -1,0 +1,91 @@
+﻿@using ASNClub.ViewModels.Profile;
+@{
+    ViewBag.Title = "My Profile";
+}
+@model ProfileViewModel
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card mb-4 mb-lg-0">
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush rounded-3">
+                    <a asp-controller="Profile" asp-action="MyProfile" style="text-decoration: none">
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                        <p class="mb-0">My Profile</p>
+                        <i class="fas fa-user mx-1" style="color: black;"></i>
+                    </li>
+                    </a>
+                    <a asp-controller="Profile" asp-action="EditProfile" asp-route-id="@Model.Id" style="text-decoration: none">
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                        <p class="mb-0">Profile settings</p>
+                        <i class="fa-solid fa-user-pen"></i>
+                    </li>
+                    </a>
+                    <a asp-controller="Profile" asp-action="MyOrders" style="text-decoration: none">
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                        <p class="mb-0">My Orders</p>
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </li>
+                    </a>
+                    <a asp-controller="Profile" asp-action="AddAddress" style="text-decoration: none">
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                        <p class="mb-0">Add Address</p>
+                        <i class="fa-solid fa-plus"></i>
+                    </li>
+                    </a>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">First Name</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.FirstName</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Surname Name</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.SurnameName</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Email</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.Email</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Phone number</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.PhoneNumber</p>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+        @if (Model.Addresses != null)
+        {
+        <div class="row">
+            <partial name="_AddressPartial" model="Model.Addresses.Where(x=> x.IsDefault).FirstOrDefault()"></partial>
+            @foreach (var address in Model.Addresses.Where(x => x.IsDefault == false))
+            {
+                <partial name="_AddressPartial" model="address"></partial>
+            }
+        </div>
+        }
+    </div>
+</div>

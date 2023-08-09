@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ASNClub.Data.Models.Adress;
+using ASNClub.Data.Models.AddressModels;
 
 namespace ASNClub.Data.Configurations
 {

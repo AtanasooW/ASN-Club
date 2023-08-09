@@ -40,7 +40,12 @@ namespace ASNClub.Data.Configurations
                 Name = "Red"
             };
             colors.Add(color);
-
+            color = new Color()
+            {
+                Id = 4,
+                Name = "White"
+            };
+            colors.Add(color);
             return colors.ToArray();
         }
     }

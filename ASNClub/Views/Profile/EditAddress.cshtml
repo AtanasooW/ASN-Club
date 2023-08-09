@@ -1,0 +1,62 @@
+﻿@using ASNClub.ViewModels.Address;
+@{
+    ViewBag.Title = "Edit address";
+}
+@model AddressViewModel
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form method="post">
+            <input asp-for="Id" style="display:none" value="@Model.Id">
+            <div class="form-group">
+                <label asp-for="CountryId"></label>
+                <select asp-for="CountryId" class="form-select" value="@Model.CountryId" id="modelSelect">
+                    <option value="">All</option>
+                    @foreach (var country in Model.Countries)
+                    {
+                        <option value="@country.Id">@country.Name</option>
+                    }
+                </select>
+            </div>
+            <!--  City  -->
+            <div class="form-group">
+                <label asp-for="City"></label>
+                <input asp-for="City" class="form-control" value="@Model.City" placeholder="City...">
+                <span asp-validation-for="City" class="small text-danger"></span>
+            </div>
+            <!--  PostalCode  -->
+            <div class="form-group">
+                <label asp-for="PostalCode"></label>
+                <input asp-for="PostalCode" value="@Model.PostalCode" class="form-control" placeholder="PostalCode...">
+                <span asp-validation-for="PostalCode" class="small text-danger"></span>
+            </div>
+            <!--  Street1  -->
+            <div class="form-group">
+                <label asp-for="Street1"></label>
+                <input asp-for="Street1" class="form-control" value="@Model.Street1" placeholder="Street1...">
+                <span asp-validation-for="Street1" class="small text-danger"></span>
+                <!--  Street2  -->
+            </div>
+            <div class="form-group">
+                <label asp-for="Street2"></label>
+                <input asp-for="Street2" class="form-control" value="@Model.Street2" placeholder="Street2...">
+                <span asp-validation-for="Street2" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StreetNumber"></label>
+                <input asp-for="StreetNumber" class="form-control" value="@Model.StreetNumber" placeholder="StreetNumber...">
+                <span asp-validation-for="StreetNumber" class="small text-danger"></span>
+            </div>
+            <!--  IsDefault  -->
+            <div class="form-group">
+                <label>
+                    <input asp-for="IsDefault" type="checkbox">Main address
+                </label>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary mt-3" type="submit" value="Save" />
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
