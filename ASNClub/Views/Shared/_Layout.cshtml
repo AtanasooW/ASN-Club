@@ -1,7 +1,14 @@
 ﻿@using ASNClub.Data.Models;
+@using ASNClub.Infrastructure.Extensions;
+@using ASNClub.Services.ShoppingCartServices.Contracts;
 @using Microsoft.AspNetCore.Identity;
 @inject SignInManager<ApplicationUser> SignInManager
+@inject IShoppingCartService shoppingService;
+    @{
+    var userId = User.GetId();
+    var total = await shoppingService.GetTotal(Guid.Parse(userId));
 
+    }
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +45,12 @@
                         {
                         <li class="nav-item"><a class="nav-link" style="color: rgb(255, 255, 255);" asp-controller="Profile" asp-action="MyProfile"><i class="fas fa-user mx-1"></i> Profile</a></li>
                         }
-                        <li class="nav-item"><a class="nav-link" style="color: rgb(255, 255, 255);" asp-controller="ShoppingCart" asp-action="Index"><i class="fas fa-shopping-cart fa-lg" style="color: #ffffff;"></i> 0.00lv</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="color: rgb(255, 255, 255);" asp-controller="ShoppingCart" asp-action="MyShoppingCart" id="ShoppigCart">
+                                <i class="fas fa-shopping-cart fa-lg" style="color: #ffffff;"></i>
+                                <span id="cartTotal">@total BGN</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -77,7 +89,32 @@
         $(document).ready(function () {
             // Initialize Bootstrap dropdown
             $('.dropdown-toggle').dropdown();
+
+            // Update total price function
+            function updateTotalPrice(newTotal) {
+                $('#TotalPrice').text(newTotal + ' BGN');
+            }
+
+            // Initial total value
+            var currentTotal = @total;
+
+            // Function to fetch the new total and update the UI
+            function updateTotal() {
+                $.get('/ShoppingCart/GetTotal', function (newTotal) {
+                    if (newTotal !== currentTotal) {
+                        currentTotal = newTotal;
+                        updateTotalPrice(newTotal);
+                    }
+                });
+            }
+
+            // Call the initial update
+            updateTotal();
+
+            // Set an interval to periodically update the total
+            setInterval(updateTotal, 10000); // Adjust the interval as needed
         });
     </script>
+
 </body>
 </html>

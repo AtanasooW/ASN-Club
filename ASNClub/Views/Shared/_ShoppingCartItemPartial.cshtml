@@ -1,0 +1,73 @@
+﻿@using ASNClub.ViewModels.ShoppingCart;
+
+@model ShoppingCartItemViewModel;
+@{
+    var discountPrice = decimal.Zero;
+    if (Model.Discount.IsDiscount)
+    {
+        discountPrice = Model.Price - ((Model.Price * (decimal)Model.Discount.DiscountRate) / 100);
+    }
+}
+<div class="row">
+    <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+        <!-- Image -->
+        <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+            <img src="@Model.ImgUrl"
+                 class="w-100" alt="Blue Jeans Jacket" />
+            <a asp-controller="Shop" asp-action="Details" asp-route-id="@Model.ProductId">
+                <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+            </a>
+        </div>
+        <!-- Image -->
+    </div>
+
+    <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+        <!-- Data -->
+        <p><strong>@Model.Type for @Model.Make @Model.Model</strong></p>
+        <p>Material: @Model.Material</p>
+        @if (Model.Color != null)
+        {
+        <p>Color: @Model.Color</p>
+        }
+        <a asp-controller="ShoppingCart" asp-action="RemoveItemFromCart" asp-route-id="@Model.Id" asp-route-ShoppingCartId="@Model.ShoppingCartId" class="btn btn-danger shadow-0"><i class="fas fa-trash"></i></a>
+        <!-- Data -->
+    </div>
+
+    <div class="product col-lg-4 col-md-6 mb-4 mb-lg-0">
+        <input class="quantity-helper" style="display: none" value="@Model.ProductQuantity" />
+        <div class="d-flex mb-4" style="max-width: 300px">
+            <!-- Decrease button -->
+            <button class="btn btn-primary px-3 me-2 decrease-quantity">
+                <i class="fas fa-minus"></i>
+            </button>
+
+            <!-- Quantity input -->
+            <div class="form-outline">
+                <input id="@Model.Id" class="quantity-input" min="1" max="1000" name="@Model.Id" value="@Model.Quantity" type="number" />
+                <label class="form-label h6">Quantity</label>
+            </div>
+
+            <!-- Increase button -->
+            <button class="btn btn-primary px-3 ms-2 increase-quantity">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+        <!-- Price -->
+        <p class="text-start text-md-center">
+            @if (Model.Discount.IsDiscount)
+            {
+                <span class="text-muted text-decoration-line-through h6">@Model.Price BGN</span>
+                <strong class="h5" id="price">@discountPrice BGN</strong>
+            }
+            else
+            {
+                <strong class="h5" id="price">@Model.Price BGN</strong>
+
+            }
+
+        </p>
+        <!-- Price -->
+    </div>
+    <hr class="my-4" />
+
+</div>

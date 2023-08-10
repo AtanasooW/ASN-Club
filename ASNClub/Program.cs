@@ -13,6 +13,8 @@ using ASNClub.Services.ProductServices;
 using ASNClub.Services.ProductServices.Contracts;
 using ASNClub.Services.ProfileServices;
 using ASNClub.Services.ProfileServices.Contracts;
+using ASNClub.Services.ShoppingCartServices;
+using ASNClub.Services.ShoppingCartServices.Contracts;
 using ASNClub.Services.TypeServices;
 using ASNClub.Services.TypeServices.Contracts;
 using Microsoft.AspNetCore.Identity;
@@ -38,6 +40,7 @@ builder.Services.AddScoped<ITypeService,TypeService>();
 builder.Services.AddScoped<IProfileService,ProfileService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 
 builder.Services.AddSignalR();
 

@@ -28,7 +28,7 @@ namespace ASNClub.Data.Models.Orders
         public Address ShippingAdress { get; set; } = null!;
 
         [Required]
-        public decimal OrderTotal => ShoppingCart.ShoppingCartItems.Sum(x => x.Product.Price);
+        public decimal OrderTotal => ShoppingCart.ShoppingCartItems.Sum(x => x.Product.Price * x.Quantity);
 
         [Required]
         [ForeignKey("OrderStatus")]

@@ -16,6 +16,6 @@ namespace ASNClub.Data.Models.Orders
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
 
-        public IEnumerable<ShoppingCartItem> ShoppingCartItems { get; set; } = new HashSet<ShoppingCartItem>();
+        public ICollection<ShoppingCartItem> ShoppingCartItems { get; set; } = new HashSet<ShoppingCartItem>();
     }
 }

@@ -210,7 +210,8 @@
                     @if (Model.Quantity > 0)
                     {
                         <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
-                        <a href="#" class="btn btn-primary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
+                        <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@Model.Id" asp-route-quantity="QUANTITY_HERE" id="ShoppingCartBtn" class="btn btn-primary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
+                     
                     }
                     else
                     {
@@ -277,6 +278,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
 
 <script>
+    $(document).ready(function () {
+        $('#ShoppingCartBtn').click(function (event) {
+            var quantityInput = document.getElementById('quantityText');
+            var shoppingCartBtn = $('#ShoppingCartBtn');
+            var newQuantity = parseInt(quantityInput.value);
+
+            var currentHref = shoppingCartBtn.attr('href');
+            var newHref = currentHref.replace("QUANTITY_HERE", encodeURIComponent(newQuantity));
+
+            shoppingCartBtn.attr('asp-route-quantity', newQuantity);
+            shoppingCartBtn.attr('href', newHref);
+            console.log(shoppingCartBtn.attr('href'));
+        });
+    });
+
+
+
     $(document).ready(function () {
         $('#ColorSelect').change(function () {
             var selectedValue = $(this).val();

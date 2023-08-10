@@ -1,0 +1,143 @@
+﻿@using ASNClub.ViewModels.ShoppingCart;
+@{
+    ViewBag.Title = "My shopping cart";
+}
+@model ShoppingCartViewModel;
+<section class="h-100 gradient-custom">
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center my-4">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header py-3">
+                        <h5 class="mb-0">Cart - @Model.ShoppingCartItems.Count() items</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var item in Model.ShoppingCartItems)
+                        {
+                            <partial name="_ShoppingCartItemPartial" model="item"></partial>
+                        }
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <p><strong>Expected shipping delivery</strong></p>
+                        <p class="mb-0">@DateTime.UtcNow.ToString("D") - @DateTime.UtcNow.AddDays(1).ToString("D")</p>
+                    </div>
+                </div>
+                <div class="card mb-4 mb-lg-0">
+                    <div class="card-body">
+                        <p><strong>We accept</strong></p>
+                        <img class="me-2" width="45px"
+                             src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
+                             alt="Visa" />
+                        <img class="me-2" width="45px"
+                             src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
+                             alt="American Express" />
+                        <img class="me-2" width="45px"
+                             src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
+                             alt="Mastercard" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header py-3">
+                        <h5 class="mb-0">Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                Products
+                                <span id="total1"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Shipping
+                                <span>Gratis</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                <div>
+                                    <strong>Total amount</strong>
+                                    <strong>
+                                        <p class="mb-0">(including VAT)</p>
+                                    </strong>
+                                </div>
+                                <input style="display: none" id="totalHelper" />
+                                <span><strong id="total"></strong></span>
+                            </li>
+                        </ul>
+
+                        <button type="button" class="btn btn-primary btn-lg btn-block">
+                            Go to checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    @section scripts {
+        <script>
+            $(document).ready(function () {
+                $('[data-mdb-toggle="tooltip"]').tooltip();
+
+                function updateTotal() {
+                    var totalPrice = 0;
+                    $('.product').each(function () {
+                        var $product = $(this);
+                        var quantity = parseInt($product.find('.quantity-input').val());
+                        var price = parseFloat($product.find('#price').text().replace(' BGN', ''));
+                        totalPrice += quantity * price;
+                    });
+
+                    $('#total').text(totalPrice.toFixed(2) + ' BGN');
+                    $('#total1').text(totalPrice.toFixed(2) + ' BGN');
+                    $('#cartTotal').text(totalPrice.toFixed(2) + ' BGN');
+                }
+
+                $('.product').each(function () {
+                    var $product = $(this);
+                    var $quantityInput = $product.find('.quantity-input');
+                    var $quantityHelper = $product.find('.quantity-helper');
+                    var $priceElement = $product.find('#price');
+
+                    $product.find('.decrease-quantity').click(function () {
+                        var currentValue = parseInt($quantityInput.val());
+                        if (currentValue > 1) {
+                            $quantityInput.val(currentValue - 1);
+                            updateTotal();
+                            var id = $quantityInput.attr('id');
+                            var quantity = currentValue - 1;
+                            updateQuantityOnServer(id, quantity);
+
+                        }
+                    });
+
+                    $product.find('.increase-quantity').click(function () {
+                        var currentValue = parseInt($quantityInput.val());
+                        var maxQuantity = parseInt($quantityHelper.val());
+                        if (currentValue < maxQuantity) {
+                            $quantityInput.val(currentValue + 1);
+                            updateTotal();
+                            var id = $quantityInput.attr('id');
+                            var quantity = currentValue + 1;
+                            updateQuantityOnServer(id, quantity);
+                            
+
+                        }
+                    });
+                });
+                function updateQuantityOnServer(id, quantity) {
+                    $.post('/ShoppingCart/UpdateQuantity', { itemId: id, quantity }, function (data) {
+                        // Handle the response if needed
+                    });
+                }
+                // Calculate initial total when the page loads
+                updateTotal();
+            });
+        </script>
+    }
+
+
+
+</section>
