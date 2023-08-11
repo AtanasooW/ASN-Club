@@ -23,10 +23,11 @@ namespace ASNClub.Tests
 
             var user = new ApplicationUser
             {
+                Id = Guid.Parse("bf582c88-57e0-4c51-904c-c21bc9233f9f"),
                 UserName = "exampleuser",
                 Email = "example@example.com",
                 FirstName = "John",
-                SurnameName = "Doe"
+                Surname = "Doe"
             };
 
             await userManager.CreateAsync(user, "Password123"); // Replace with the desired password

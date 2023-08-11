@@ -29,7 +29,7 @@ namespace ASNClub.Services.ProfileServices
             }
 
             product.FirstName = model.FirstName;
-            product.SurnameName = model.SurnameName;
+            product.Surname = model.Surname;
             product.Email = model.Email;
             product.PhoneNumber = model.PhoneNumber;
 
@@ -42,7 +42,7 @@ namespace ASNClub.Services.ProfileServices
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
-                SurnameName = x.SurnameName,
+                Surname = x.Surname,
                 Email = x.Email,
                 PhoneNumber = x.PhoneNumber,
                 Addresses = x.UserAddresses.Count >= 1 ? x.UserAddresses.Select(x => new AddressViewModel
@@ -66,7 +66,7 @@ namespace ASNClub.Services.ProfileServices
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
-                SurnameName = x.SurnameName,
+                Surname = x.Surname,
                 Email = x.Email,
                 PhoneNumber = x.PhoneNumber
             }).FirstOrDefaultAsync();

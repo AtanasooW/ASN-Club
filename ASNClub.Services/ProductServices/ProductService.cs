@@ -328,6 +328,12 @@ namespace ASNClub.Services.ProductServices
             product.Comments.Add(comment);
             await dbContext.SaveChangesAsync();
         }
+        public async Task RemoveCommentAsync(Guid id, int productId)
+        {
+            var comment = await dbContext.Comments.Where(x => x.Id == id && x.ProductId == productId).FirstOrDefaultAsync();
+            dbContext.Comments.Remove(comment);
+            await dbContext.SaveChangesAsync();
+        }
 
 
 
@@ -364,5 +370,6 @@ namespace ASNClub.Services.ProductServices
                .ToListAsync();
             return models;
         }
+
     }
 }

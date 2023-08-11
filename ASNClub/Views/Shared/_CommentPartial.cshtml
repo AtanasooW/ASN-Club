@@ -21,11 +21,8 @@
             {
                 if (Model.OwnerId == Guid.Parse(User.GetId()))
                 {
-                    <form asp-controller="Shop" asp-action="RemoveComment" asp-route-id="@Model.Id" method="post">
-                        <input type="hidden" id="commentContent" asp-route-content="@Model.Id" />
-
-                        <button type="submit" class="btn btn-outline-dark mt-auto">Delete comment</button>
-                    </form>
+                    
+                  <div class="text-center"><a asp-controller="Shop" asp-action="RemoveComment" asp-route-id="@Model.Id" asp-route-productId="@Model.ProductId" class="btn btn-outline-dark mt-auto">Delete Comment</a></div>
                 }
             }
 

@@ -54,10 +54,11 @@ namespace ASNClub.Controllers
                 TempData["SuccessMessage"] = "Successfully placed a order";
                 return RedirectToAction("All", "Shop");
             }
-            catch (Exception)
+            catch (Exception e )
             {
 
-                throw;
+                TempData["ErrorMessage"] = e.Message;
+                return RedirectToAction("All", "Shop");
             }
         }
         [HttpGet]

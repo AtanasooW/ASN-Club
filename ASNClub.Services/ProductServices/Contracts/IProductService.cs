@@ -23,6 +23,7 @@ namespace ASNClub.Services.ProductServices.Contracts
 
         public Task AddRatingAsync(int id, int ratingValue, string? userId);
         public Task AddCommentAsync(int id, string username, string ownerId, string content);
+        public Task RemoveCommentAsync(Guid id, int productId);
 
         public Task<IEnumerable<string>> AllMakeNamesAsync();
         public Task<IEnumerable<string>> AllModelNamesAsync(string make);

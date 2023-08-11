@@ -9,6 +9,7 @@ using ASNClub.Services.TypeServices.Contracts;
 using ASNClub.ViewModels.Product;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using System;
 using static ASNClub.Common.NotificationMessagesConstants;
 
 
@@ -81,6 +82,14 @@ namespace ASNClub.Controllers
             }
             return RedirectToAction("Details", new {id = id });
         }
-        
+        public async Task<IActionResult> RemoveComment(string id,int productId)
+        {
+            await productService.RemoveCommentAsync(Guid.Parse(id), productId);
+            TempData["SuccessMessage"] = "Successfully delete a comment.";
+            return RedirectToAction("Details", new { id = productId });
+            
+        }
+
+
     }
 }

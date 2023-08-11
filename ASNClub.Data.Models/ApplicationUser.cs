@@ -20,7 +20,7 @@ namespace ASNClub.Data.Models
 
         public string? FirstName { get; set; }
         [StringLength(SurNameMaxLength, MinimumLength = SurNameMinLength)]
-        public string? SurnameName { get; set; }
+        public string? Surname { get; set; }
         public ICollection<UserAddress> UserAddresses { get; set; } = new HashSet<UserAddress>();
     }
 }

@@ -111,7 +111,7 @@
                     <div class="d-flex flex-row my-3">
                         <div class="text-warning mb-1 me-2">
                             @* Display the average rating with stars *@
-                            @for (int i = 0; i < Model.Rating; i++)
+                            @for (int i = 0; i < Math.Floor(Model.Rating); i++)
                             {
                                 <i class="fa fa-star"></i>
                             }

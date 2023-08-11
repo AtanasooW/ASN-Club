@@ -118,7 +118,7 @@ namespace ASNClub.Services.OrderServices
                     {
                         Id = x.User.Id,
                         FirstName = x.User.FirstName,
-                        SurnameName = x.User.SurnameName,
+                        Surname = x.User.Surname,
                         Email = x.User.Email,
                         PhoneNumber = x.User.PhoneNumber,
                         Addresses = x.User.UserAddresses.Count >= 1 ? x.User.UserAddresses.Select(x => new AddressViewModel
@@ -180,6 +180,10 @@ namespace ASNClub.Services.OrderServices
             }
             else
             {//if person have profile
+                if (!shoppingCart.ShoppingCartItems.Any())
+                {
+                    throw new InvalidOperationException("No items in the cart");
+                }
                 CompareAddreses(model, address);
 
                 order.OrderDate = DateTime.Now;
@@ -200,11 +204,11 @@ namespace ASNClub.Services.OrderServices
             {
                 if (item.Product.Discount.IsDiscount)
                 {
-                    order.OrderTotal += item.Product.Price - ((item.Product.Price * (decimal)item.Product.Discount.DiscountRate) / 100);
+                    order.OrderTotal += (item.Product.Price - ((item.Product.Price * (decimal)item.Product.Discount.DiscountRate) / 100))  * item.Quantity;
                 }
                 else
                 {
-                    order.OrderTotal += item.Product.Price;
+                    order.OrderTotal += item.Product.Price * item.Quantity;
                 }
             }
             foreach (var item in shoppingCart.ShoppingCartItems)
@@ -288,7 +292,7 @@ namespace ASNClub.Services.OrderServices
                         ImgUrl = x.Product.ImgUrls.FirstOrDefault(p => p.ProductId == x.Product.Id).ImgUrl.Url
                     }).ToList(),
                     FirstName = x.User.FirstName,
-                    SurnameName = x.User.SurnameName,
+                    SurnameName = x.User.Surname,
                     Email = x.User.Email,
                     PhoneNumber = x.User.PhoneNumber,
                     ShippingAddress = x.ShoppingCart.User.UserAddresses.Where(x => x.Address.IsDefault).Select(x=> new AddressViewModel

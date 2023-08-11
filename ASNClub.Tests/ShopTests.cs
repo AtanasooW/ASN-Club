@@ -1,4 +1,5 @@
 ﻿using ASNClub.Data;
+using ASNClub.Data.Models.Product;
 using ASNClub.Services.AddressServices;
 using ASNClub.Services.CategoryServices;
 using ASNClub.Services.CategoryServices.Contracts;
@@ -20,7 +21,6 @@ using ASNClub.ViewModels.Type;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-
 
 namespace ASNClub.Tests
 {
@@ -339,6 +339,34 @@ namespace ASNClub.Tests
             Assert.NotNull(comment);
             Assert.AreEqual(content, comment.Text);
             Assert.AreEqual(username, comment.OwnerName);
+        }
+        [Test]
+        public async Task RemoveCommentAsync_Should_RemoveComment()
+        {
+            // Arrange
+
+            // Seed a comment and a product
+            var productId = 1; 
+            var commentId = Guid.NewGuid();
+            var comment = new Comment
+            {
+                Id = commentId,
+                ProductId = productId,
+                OwnerName = "Pesho",
+                OwnerId = Guid.Parse("bf582c88-57e0-4c51-904c-c21bc9233f9f"),
+                PostedOn = DateTime.UtcNow,
+                Text = "Kak sme bratle :)",
+
+            };
+            await dbContext.Comments.AddAsync(comment);
+            await dbContext.SaveChangesAsync();
+
+            // Act
+            await productService.RemoveCommentAsync(commentId, productId);
+            var removedComment = await dbContext.Comments.FirstOrDefaultAsync();
+
+            // Assert
+            Assert.IsNull(removedComment); // Comment should be removed
         }
         [Test]
         public async Task GetAllColorsForProductAsync_Should_Return_Colors_For_Product()

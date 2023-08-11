@@ -38,7 +38,7 @@ namespace ASNClub.Tests
             {
                 Id = userId,
                 FirstName = "Vasil",
-                SurnameName = "Karas",
+                Surname = "Karas",
                 Email = "Vase@example.com",
                 PhoneNumber = "1234567890"
             };
@@ -49,7 +49,7 @@ namespace ASNClub.Tests
             {
                 Id = userId,
                 FirstName = "Pesho",
-                SurnameName = "Vailev",
+                Surname = "Vailev",
                 Email = "pesho@example.com",
                 PhoneNumber = "9876543210"
             };
@@ -61,7 +61,7 @@ namespace ASNClub.Tests
             var editedUser = await dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
             Assert.NotNull(editedUser);
             Assert.AreEqual("Pesho", editedUser.FirstName);
-            Assert.AreEqual("Vailev", editedUser.SurnameName);
+            Assert.AreEqual("Vailev", editedUser.Surname);
             Assert.AreEqual("pesho@example.com", editedUser.Email);
             Assert.AreEqual("9876543210", editedUser.PhoneNumber);
         }
@@ -74,7 +74,7 @@ namespace ASNClub.Tests
             {
                 Id = userId,
                 FirstName = "Vasil",
-                SurnameName = "Karas",
+                Surname = "Karas",
                 Email = "Vasil@example.com",
                 PhoneNumber = "1234567890"
             };
@@ -88,7 +88,7 @@ namespace ASNClub.Tests
             Assert.NotNull(profile);
             Assert.AreEqual(userId, profile.Id);
             Assert.AreEqual("Vasil", profile.FirstName);
-            Assert.AreEqual("Karas", profile.SurnameName);
+            Assert.AreEqual("Karas", profile.Surname);
             Assert.AreEqual("Vasil@example.com", profile.Email);
             Assert.AreEqual("1234567890", profile.PhoneNumber);
         }
@@ -102,7 +102,7 @@ namespace ASNClub.Tests
             {
                 Id = userId,
                 FirstName = "Vasil",
-                SurnameName = "Karas",
+                Surname = "Karas",
                 Email = "Vasil@example.com",
                 PhoneNumber = "1234567890"
             };
@@ -116,7 +116,7 @@ namespace ASNClub.Tests
             Assert.NotNull(formModel);
             Assert.AreEqual(userId, formModel.Id);
             Assert.AreEqual("Vasil", formModel.FirstName);
-            Assert.AreEqual("Karas", formModel.SurnameName);
+            Assert.AreEqual("Karas", formModel.Surname);
             Assert.AreEqual("Vasil@example.com", formModel.Email);
             Assert.AreEqual("1234567890", formModel.PhoneNumber);
         }

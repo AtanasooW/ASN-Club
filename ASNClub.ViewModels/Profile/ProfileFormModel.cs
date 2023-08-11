@@ -16,7 +16,7 @@ namespace ASNClub.ViewModels.Profile
 
         public string? FirstName { get; set; }
         [StringLength(SurNameMaxLength, MinimumLength = SurNameMinLength)]
-        public string? SurnameName { get; set; }
+        public string? Surname { get; set; }
 
         public string Email { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
