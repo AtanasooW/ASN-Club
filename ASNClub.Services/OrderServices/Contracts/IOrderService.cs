@@ -11,5 +11,11 @@ namespace ASNClub.Services.OrderServices.Contracts
     {
         public Task<OrderViewModel> GetOrderByUserIdAsync(Guid userId);
         public Task PlaceOrderAsync(OrderViewModel model);
+        public Task<ICollection<MyOrderViewModel>> GetMyOrdersByIdAsync(Guid userId);
+        public Task<ICollection<MyOrderViewModel>> GetAllOrdersAsync();
+        public Task<MyOrderDetailsViewModel> GetMyOrderDetailsByIdAsync(Guid userId, Guid id);
+        public Task<MyOrderDetailsViewModel> GetOrderDetailByIdAsync(Guid id);
+        public Task<OrderStatusViewModel> GetOrderStatusAsync(Guid id);
+        Task EditOrderStatusAsync(OrderStatusViewModel model);
     }
 }

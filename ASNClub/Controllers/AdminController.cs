@@ -2,13 +2,17 @@
 using ASNClub.Services.CategoryServices.Contracts;
 using ASNClub.Services.ColorServices;
 using ASNClub.Services.ColorServices.Contracts;
+using ASNClub.Services.OrderServices.Contracts;
 using ASNClub.Services.ProductServices.Contracts;
 using ASNClub.Services.TypeServices;
 using ASNClub.Services.TypeServices.Contracts;
+using ASNClub.ViewModels.Order;
 using ASNClub.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using static ASNClub.Common.NotificationMessagesConstants;
+
 
 namespace ASNClub.Controllers
 {
@@ -22,7 +26,14 @@ namespace ASNClub.Controllers
         private readonly IMaterialService categoryService;
         private readonly IColorService colorService;
         private readonly ITypeService typeService;
-        public AdminController(RoleManager<IdentityRole<Guid>> _roleManager, UserManager<ApplicationUser> _userManager, IProductService _productService, IMaterialService _categoryService, IColorService _colorService, ITypeService _typeService)
+        private readonly IOrderService orderService;
+        public AdminController(RoleManager<IdentityRole<Guid>> _roleManager,
+            UserManager<ApplicationUser> _userManager,
+            IProductService _productService,
+            IMaterialService _categoryService,
+            IColorService _colorService,
+            ITypeService _typeService,
+            IOrderService _orderService)
         {
             this.roleManager = _roleManager;
             this.userManager = _userManager;
@@ -30,8 +41,9 @@ namespace ASNClub.Controllers
             this.categoryService = _categoryService;
             this.colorService = _colorService;
             this.typeService = _typeService;
+            this.orderService = _orderService;
         }
-        [Authorize(Roles ="Admin")]
+     
         public async Task<IActionResult> CreateRole(string roleName)
         {
             if (await roleManager.RoleExistsAsync(roleName))
@@ -42,7 +54,29 @@ namespace ASNClub.Controllers
             var result = await roleManager.CreateAsync(role);
             return Ok(result);
         }
-        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> AllOrders()
+        {
+            var model = await orderService.GetAllOrdersAsync();
+            return View(model);
+        }
+        public async Task<IActionResult> Details(string id)
+        {
+            var model = await orderService.GetOrderDetailByIdAsync(Guid.Parse(id));
+            return View(model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> EditStatus(string id)
+        {
+            var model = await orderService.GetOrderStatusAsync(Guid.Parse(id));
+            return View(model);
+        }  
+        [HttpPost]
+        public async Task<IActionResult> EditStatus(OrderStatusViewModel model)
+        {
+            await orderService.EditOrderStatusAsync(model);
+            return RedirectToAction("Details", new { id = model.OrderId });
+        }
+       
         public async Task<IActionResult> MakeAdmin(string email)
         {
             var user = await userManager.FindByEmailAsync(email);
@@ -58,9 +92,10 @@ namespace ASNClub.Controllers
         public async Task<IActionResult> DeleteProduct(int id)
         {
             await productService.DeleteProductByIdAsync(id);
+            TempData["SuccessMessage"] = "Successfully delete product";
             return RedirectToAction("All", "Shop");
         }
-        [Authorize(Roles = "Admin")]
+    
         [HttpGet]
         public async Task<IActionResult> EditProduct(int id)
         {
@@ -70,7 +105,7 @@ namespace ASNClub.Controllers
             productFormModel.Types = await typeService.AllTypesAsync();
             return View(productFormModel);
         }
-        [Authorize(Roles = "Admin")]
+     
         [HttpPost]
         public async Task<IActionResult> EditProduct(ProductFormModel formModel)
         {
@@ -82,9 +117,10 @@ namespace ASNClub.Controllers
                 return this.View(formModel);
             }
             await productService.EditProductAsync(formModel);
+            TempData["SuccessMessage"] = "Successfully edit product";
             return RedirectToAction("All", "Shop");
         }
-        [Authorize(Roles = "Admin")]
+       
         [HttpGet]
         public async Task<IActionResult> Add()
         {
@@ -94,7 +130,7 @@ namespace ASNClub.Controllers
             formModel.Types = await typeService.AllTypesAsync();
             return this.View(formModel);
         }
-        [Authorize(Roles = "Admin")]
+       
         [HttpPost]
         public async Task<IActionResult> Add(ProductFormModel formModel)
         {
@@ -106,6 +142,7 @@ namespace ASNClub.Controllers
                 return this.View(formModel);
             }
             await productService.AddProductAsync(formModel);
+            TempData["SuccessMessage"] = "Successfully added product";
             return RedirectToAction("All", "Shop");
         }
     }

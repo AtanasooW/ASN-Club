@@ -4,6 +4,8 @@
 @using Microsoft.AspNetCore.Identity;
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IShoppingCartService shoppingService;
+@inject RoleManager<IdentityRole<Guid>> RoleManager
+
 @{
     var userId = User.GetId();
     var total = "0.0";
@@ -42,8 +44,6 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Shop" asp-action="All">Shop</a></li>
                         @if (SignInManager.IsSignedIn(User))
                         {
@@ -54,6 +54,11 @@
                                 <span id="cartTotal">@total BGN</span>
                             </a>
                         </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {  
+                        <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="AllOrders">All orders</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="Add">Add product</a></li>
                         }
                     </ul>
                 </div>

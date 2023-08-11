@@ -9,6 +9,7 @@ namespace ASNClub.ViewModels.Order
         public ProfileViewModel Profile { get; set; } = null!;
         public ICollection<ProductAllViewModel> Products { get; set; } = new HashSet<ProductAllViewModel>();
         public AddressViewModel ShippingAdress { get; set; } = null!;
-
+        public int? ProductId { get; set; }
+        public int? Quantity { get; set; }
     }
 }

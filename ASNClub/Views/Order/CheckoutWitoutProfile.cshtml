@@ -1,0 +1,146 @@
+﻿@using ASNClub.Infrastructure.Extensions;
+@using ASNClub.ViewModels.Order;
+@{
+    ViewBag.Title = "Checkout";
+    
+}
+
+@model OrderViewModel
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container wrapper">
+    <div class="row cart-head">
+        <div class="container">
+            <div class="row">
+                <p></p>
+            </div>
+            <div class="row">
+                <p h3>Finish order</p>
+            </div>
+        </div>
+    </div>
+    <div class="row cart-body">
+
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-push-6 col-sm-push-6">
+            <!--REVIEW ORDER-->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Review Order <div class="pull-right"><small><a asp-controller="ShoppingCart" asp-action="MyShoppingCart" class="afix-1">Edit Cart</a></small></div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="panel-body">
+                        @foreach (var product in Model.Products)
+                        {
+                            <partial name="_OrderProductPartial" model="product"></partial>
+                            <div class="form-group"><hr /></div>
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <strong>Order Total</strong>
+                        <div class="pull-right"><span id="total" class="h4"></span></div>
+                    </div>
+                </div>
+            </div>
+            <!--REVIEW ORDER END-->
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-pull-6 col-sm-pull-6">
+            <!--SHIPPING METHOD-->
+            <div class="panel panel-info">
+                <div class="panel-heading">Address</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <h4>Shipping Address</h4>
+                        </div>
+                    </div>
+                    <form method="post">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label asp-for="ShippingAdress.CountryId"></label>
+                                <select asp-for="ShippingAdress.CountryId" class="form-select" id="modelSelect">
+                                    @foreach (var country in Model.ShippingAdress.Countries)
+                                    {
+                                        <option value="@country.Id">@country.Name</option>
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                        <input asp-for="ProductId" value="@Model.ProductId" style="display:none" />
+                        <div class="form-group">
+
+                            <label asp-for="Profile.FirstName"></label>
+                            <input asp-for="Profile.FirstName" class="form-control" placeholder="Ivan...">
+                            <span asp-validation-for="Profile.FirstName" class="small text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+
+                            <label asp-for="Profile.SurnameName"></label>
+                            <input asp-for="Profile.SurnameName" class="form-control" placeholder="Ivanov...">
+                            <span asp-validation-for="Profile.SurnameName" class="small text-danger"></span>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label asp-for="ShippingAdress.City"></label>
+                            <input asp-for="ShippingAdress.City" class="form-control" placeholder="Sofia...">
+                            <span asp-validation-for="ShippingAdress.City" class="small text-danger"></span>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label asp-for="ShippingAdress.Street1"></label>
+                            <input asp-for="ShippingAdress.Street1" class="form-control" placeholder="Tzar Boris 3...">
+                            <span asp-validation-for="ShippingAdress.Street1" class="small text-danger"></span>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label asp-for="ShippingAdress.Street2"></label>
+                            <input asp-for="ShippingAdress.Street2" class="form-control" placeholder="...">
+                            <span asp-validation-for="ShippingAdress.Street2" class="small text-danger"></span>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label asp-for="ShippingAdress.StreetNumber"></label>
+                            <input asp-for="ShippingAdress.StreetNumber" class="form-control" placeholder="57...">
+                            <span asp-validation-for="ShippingAdress.StreetNumber" class="small text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ShippingAdress.PostalCode"></label>
+                            <input asp-for="ShippingAdress.PostalCode" class="form-control" placeholder="2500...">
+                            <span asp-validation-for="ShippingAdress.PostalCode" class="small text-danger"></span>
+                        </div>
+                        <div class="form-group">
+
+                            <label asp-for="Profile.PhoneNumber"></label>
+                            <input asp-for="Profile.PhoneNumber" class="form-control" placeholder="2500...">
+                            <span asp-validation-for="Profile.PhoneNumber" class="small text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Profile.Email"></label>
+                            <input asp-for="Profile.Email" class="form-control" placeholder="example@gmail.com...">
+                            <span asp-validation-for="Profile.Email" class="small text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <button type="submit" class="btn btn-primary btn-submit-fix" value="Save">Place Order</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row cart-footer">
+    </div>
+</div>

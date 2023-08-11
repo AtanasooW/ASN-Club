@@ -2,12 +2,12 @@
 
 namespace ASNClub.Data.Models.Orders
 {
-    public class OrderStatus
-    {
-        [Key]
-        public Guid Id { get; set; }
-
-        [Required]
-        public string Status { get; set; } = null!;
-    }
+   public class OrderStatus
+   {
+       [Key]
+       public int Id { get; set; }
+   
+       [Required]
+       public string Status { get; set; } = null!;
+   }
 }

@@ -1,0 +1,47 @@
+﻿@using ASNClub.ViewModels.Order;
+@model MyOrderViewModel
+
+
+<div class="col-md-6" style="margin-bottom: 10px">
+    <div class="card mb-4 mb-md-0">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Number of order</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">@Model.Id</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Date of order</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">@Model.OrderDate</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Total price</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">@Model.OrderTotal</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Status</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">@Model.OrderStatus</p>
+                </div>
+            </div>
+            <hr>
+            <div><a asp-controller="Admin" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary mt-3" style="text-decoration: none">View details</a></div>
+        </div>
+    </div>
+</div>

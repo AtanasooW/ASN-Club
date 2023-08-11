@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ASNClub.Data.Configurations
 {
-    internal class TypeEntityConfiguration : IEntityTypeConfiguration<Models.Product.Type>
+    public class TypeEntityConfiguration : IEntityTypeConfiguration<Models.Product.Type>
     {
         public void Configure(EntityTypeBuilder<Models.Product.Type> builder)
         {

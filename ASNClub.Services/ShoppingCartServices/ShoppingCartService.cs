@@ -39,7 +39,7 @@ namespace ASNClub.Services.ShoppingCartServices
                 }
                 else
                 {
-                    var product = await productService.GetProductByIdAsync(id);
+                    var product = await productService.GetProductOfTypeProductByIdAsync(id);
                     ShoppingCartItem newShoppingCartItem = new ShoppingCartItem()
                     {
                         ProductId = id,
@@ -92,8 +92,27 @@ namespace ASNClub.Services.ShoppingCartServices
                 }).ToListAsync();
         }
 
+        public async Task<ShoppingCart?> GetShoppingCartByUserId(Guid userId)
+        {
+            return await dbContext.ShoppingCarts
+                .Include(x=> x.ShoppingCartItems)
+                .ThenInclude(x=> x.Product)
+                .ThenInclude(x=> x.Discount)
+                .Where(x => x.UserId == userId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<ShoppingCartViewModel?> GetShoppingCartByUserIdAsync(Guid userId)
         {
+            if (!dbContext.ShoppingCarts.Where(x=> x.UserId == userId).Any())
+            {
+                ShoppingCart shoppingCart = new ShoppingCart()
+                {
+                    UserId = userId
+                };
+                await dbContext.ShoppingCarts.AddAsync(shoppingCart);
+                await dbContext.SaveChangesAsync();
+            }
             return await dbContext.ShoppingCarts.Include(x => x.ShoppingCartItems)
                 .Where(x => x.UserId == userId)
                 .Select(x => new ShoppingCartViewModel
@@ -127,6 +146,7 @@ namespace ASNClub.Services.ShoppingCartServices
         public async Task<string> GetTotal(Guid userId)
         {
             var shoppingCart = await dbContext.ShoppingCarts
+                .AsNoTracking()
                 .Include(x => x.ShoppingCartItems)
                 .ThenInclude(x=> x.Product)
                 .ThenInclude(x=> x.Discount)
@@ -150,12 +170,11 @@ namespace ASNClub.Services.ShoppingCartServices
             }
             else
             {
-                throw new InvalidOperationException("Invalid shopping cart");
+                return "0.00";
             }
-            await dbContext.SaveChangesAsync();
         }
 
-        public async Task RemoveProductFromCartAsync(int id, int shoppingCartId, Guid userId)
+        public async Task RemoveProductFromCartAsync(int id, Guid userId)
         {
             var shoppingCart = await dbContext.ShoppingCarts.Include(x => x.ShoppingCartItems).Where(x => x.UserId == userId).FirstOrDefaultAsync();
             if (shoppingCart != null)

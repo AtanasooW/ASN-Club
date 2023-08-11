@@ -36,12 +36,15 @@ namespace ASNClub.Data
         //Order
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderStatus> OrdersStatuses { get; set; }
+        public DbSet<OrderItem> OrdersItems { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
             builder.Entity<Product>(x => x.Property(x => x.ColorId).IsRequired(false));
+            builder.Entity<Order>(x => x.Property(x => x.UserId).IsRequired(false));
+            builder.Entity<Order>(x => x.Property(x => x.ShoppingCartId).IsRequired(false));
 
             builder.Entity<ProductImgUrl>(x =>x.HasKey(x => new {x.ProductId,x.ImgUrlId}));
             builder.Entity<UserAddress>(x =>x.HasKey(x => new {x.AddressId,x.UserId}));

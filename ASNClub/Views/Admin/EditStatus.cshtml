@@ -1,0 +1,18 @@
+﻿@using ASNClub.ViewModels.Order;
+@model OrderStatusViewModel;
+
+<form method="post">
+    <div class="form-group">
+        <input style="display: none" asp-for="OrderId" value="@Model.OrderId"/>
+        <label asp-for="OrderStatusId"></label>
+        <select asp-for="OrderStatusId" class="form-select" value="@Model.OrderStatusId" id="modelSelect">
+            @foreach (var orderStatus in Model.OrderStatuses)
+            {
+                <option value="@orderStatus.Id">@orderStatus.Status</option>
+            }
+        </select>
+    </div>
+    <div class="text-center">
+        <input class="btn btn-primary mt-3" type="submit" value="Save" />
+    </div>
+</form>

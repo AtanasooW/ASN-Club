@@ -1,4 +1,5 @@
-﻿using ASNClub.ViewModels.Product;
+﻿using ASNClub.Data.Models.Orders;
+using ASNClub.ViewModels.Product;
 using ASNClub.ViewModels.ShoppingCart;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,10 @@ namespace ASNClub.Services.ShoppingCartServices.Contracts
     {
         public Task AddProductToCartAsync(int id, int quantity, Guid userId);
         public Task<ShoppingCartViewModel> GetShoppingCartByUserIdAsync(Guid userId);
-        public Task RemoveProductFromCartAsync(int id, int shoppingCartId, Guid userId);
+        public Task RemoveProductFromCartAsync(int id, Guid userId);
         public Task<string> GetTotal(Guid userId);
         public Task UpdateProductQuantityAsync(int shoppingCartItemId, int newQuantity);
         public Task<ICollection<ProductAllViewModel>> GetAllProductsFromShoppingCartAsync(Guid userId);
+        public Task<ShoppingCart> GetShoppingCartByUserId(Guid userId);
     }
 }

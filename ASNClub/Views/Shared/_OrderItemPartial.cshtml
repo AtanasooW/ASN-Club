@@ -1,0 +1,50 @@
+﻿@using ASNClub.ViewModels.Product;
+@using ASNClub.ViewModels.ShoppingCart;
+
+@model ProductAllViewModel;
+@{
+    var discountPrice = decimal.Zero;
+    if (Model.IsDiscount)
+    {
+        discountPrice = Model.Price - ((Model.Price * (decimal)Model.DiscountRate) / 100);
+    }
+}
+<div class="row">
+    <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+        <!-- Image -->
+        <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+            <img src="@Model.ImgUrl"
+                 class="w-100" alt="Blue Jeans Jacket" />
+            <a asp-controller="Shop" asp-action="Details" asp-route-id="@Model.Id">
+                <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+            </a>
+        </div>
+        <!-- Image -->
+    </div>
+
+    <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+        <p><strong>@Model.Type for @Model.Make @Model.Model</strong></p>
+        <p>Material: @Model.Material</p>
+        @if (Model.Color != null)
+        {
+            <p>Color: @Model.Color</p>
+        }
+    </div>
+
+    <div class="product col-lg-4 col-md-6 mb-4 mb-lg-0">
+
+        <p class="text-start text-md-center">
+            @if (Model.IsDiscount)
+            {
+                <span class="text-muted text-decoration-line-through h6">@Model.Price BGN</span>
+                <strong class="h5" id="price">@discountPrice BGN</strong>
+            }
+            else
+            {
+                <strong class="h5" id="price">@Model.Price BGN</strong>
+
+            }
+        </p>
+    </div>
+    <hr class="my-4" />
+</div>

@@ -16,13 +16,16 @@ namespace ASNClub.Services.ProductServices.Contracts
         public Task EditProductAsync(ProductFormModel formModel);
         public Task DeleteProductByIdAsync(int id);
         public Task<AllProductsSortedModel> GetAllProductsAsync(AllProductQueryModel queryModel);
+        public Task<ProductDetailsViewModel> GetProductDetailsByIdAsync(int id);
+        public Task<ProductFormModel> GetProductForEditByIdAsync(int id);
+        public Task<ProductAllViewModel> GetProductByIdAsync(int id);
+        public Task<Product> GetProductOfTypeProductByIdAsync(int id);
+
+        public Task AddRatingAsync(int id, int ratingValue, string? userId);
+        public Task AddCommentAsync(int id, string username, string ownerId, string content);
+
         public Task<IEnumerable<string>> AllMakeNamesAsync();
         public Task<IEnumerable<string>> AllModelNamesAsync(string make);
-        public Task<ProductDetailsViewModel> GetProductDetailsByIdAsync(int id);
-        public Task AddRatingAsync(int id, int ratingValue, string? userId);
-        public Task<Product> GetProductByIdAsync(int id);
-        public Task AddCommentAsync(int id, string username, string ownerId, string content);
-        public Task<ProductFormModel> GetProductForEditByIdAsync(int id);
         public Task<List<ColorProductIdViewModel>> GetAllColorsForProductAsync(string make, string model, int typeId);
     }
 }

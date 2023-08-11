@@ -19,6 +19,12 @@ namespace ASNClub.Controllers
             var userId = User.GetId();
             var model = await shoppingCartService.GetShoppingCartByUserIdAsync(Guid.Parse(userId));
             return View(model);
+        } 
+        public async Task<IActionResult> Fixer(int id, int quantity)
+        {
+            var userId = User.GetId();
+            await shoppingCartService.AddProductToCartAsync(id, quantity, Guid.Parse(userId));
+            return RedirectToAction("MyShoppingCart");
         }
         public async Task<IActionResult> AddToCart(int id, int quantity)
         {
@@ -31,7 +37,7 @@ namespace ASNClub.Controllers
         public async Task<IActionResult> RemoveItemFromCart(int id, int shoppingCartId)
         {
             var userId = User.GetId();
-            await shoppingCartService.RemoveProductFromCartAsync(id, shoppingCartId, Guid.Parse(userId));
+            await shoppingCartService.RemoveProductFromCartAsync(id, Guid.Parse(userId));
             TempData[SuccessMessage] = "Successfuly remove item from the shopping cart";
 
             return RedirectToAction("MyShoppingCart");

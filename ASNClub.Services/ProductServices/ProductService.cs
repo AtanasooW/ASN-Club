@@ -76,7 +76,6 @@ namespace ASNClub.Services.ProductServices
                 product.ImgUrls.Add(productImg);
 
             }
-
             await dbContext.SaveChangesAsync();
         }
         public async Task EditProductAsync(ProductFormModel formModel)
@@ -85,7 +84,7 @@ namespace ASNClub.Services.ProductServices
             {
                 formModel.ColorId = null;
             }
-            var product = await GetProductByIdAsync((int)formModel.Id);
+            var product = await GetProductOfTypeProductByIdAsync((int)formModel.Id);
 
             if (formModel.Discount.IsDiscount)
             {
@@ -113,7 +112,12 @@ namespace ASNClub.Services.ProductServices
 
             await dbContext.SaveChangesAsync();
         }
-
+        public async Task DeleteProductByIdAsync(int id)
+        {
+            var product = await GetProductOfTypeProductByIdAsync(id);
+            dbContext.Products.Remove(product);
+            await dbContext.SaveChangesAsync();
+        }
         public async Task<AllProductsSortedModel> GetAllProductsAsync(AllProductQueryModel queryModel)
         {
             IQueryable<Product> products = dbContext.Products.AsQueryable().AsNoTracking();
@@ -184,27 +188,6 @@ namespace ASNClub.Services.ProductServices
             };
             return sortedModel;
         }
-
-        public async Task<IEnumerable<string>> AllMakeNamesAsync()
-        {
-            IEnumerable<string> makes = await dbContext.Products
-               .AsNoTracking()
-               .Select(x => x.Make)
-               .Distinct()
-               .ToListAsync();
-            return makes;
-        }
-        public async Task<IEnumerable<string>> AllModelNamesAsync(string make)
-        {
-            IEnumerable<string> models = await dbContext.Products
-               .AsNoTracking()
-               .Where(x => x.Make == make)
-               .Select(x => x.Model)
-               .Distinct()
-               .ToListAsync();
-            return models;
-        }
-
         public async Task<ProductDetailsViewModel?> GetProductDetailsByIdAsync(int id)
         {
             var product = await dbContext.Products
@@ -250,66 +233,9 @@ namespace ASNClub.Services.ProductServices
             product.Colors = colors;
             return product;
         }
-        public async Task<List<ColorProductIdViewModel>> GetAllColorsForProductAsync(string make, string model, int typeId)
-        {
-            return await dbContext.Products.Where(x => x.Make == make && x.Model == model && x.TypeId == typeId)
-                .Select(x => new ColorProductIdViewModel
-                {
-                   ColorName = x.Color.Name,
-                   ProductId = x.Id
-               }).ToListAsync();
-        }
-
-        public async Task AddRatingAsync(int id, int ratingValue, string? userId)
-        {
-            if (dbContext.Ratings.Any(x => x.UserId == Guid.Parse(userId) && x.ProductId == id))
-            {
-                throw new InvalidOperationException("Already rated");
-            }
-            var rating = new Rating()
-            {
-                ProductId = id,
-                UserId = Guid.Parse(userId),
-                RatingValue = ratingValue
-            };
-            var product = await GetProductByIdAsync(id);
-            if (product == null)
-            {
-                throw new InvalidOperationException("Product doesn't exist");
-            }
-            await dbContext.Ratings.AddAsync(rating);
-            product.Ratings.Add(rating);
-            await dbContext.SaveChangesAsync();
-
-        }
-
-        public async Task<Product> GetProductByIdAsync(int id)
-        {
-            return await dbContext.Products.Include(x => x.Discount).Where(x => x.Id == id).FirstOrDefaultAsync();
-        }
-
-        public async Task AddCommentAsync(int id, string username, string ownerId, string content)
-        {
-            //if (product == null)
-            //{
-            //    throw new InvalidOperationException("Invalid product");
-            //}//if user == null 
-            var comment = new Comment()
-            {
-                Text = content,
-                PostedOn = DateTime.Now,
-                OwnerId = Guid.Parse(ownerId),
-                OwnerName = username
-            };
-            await dbContext.Comments.AddAsync(comment);
-            var product = await dbContext.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
-            product.Comments.Add(comment);
-            await dbContext.SaveChangesAsync();
-        }
-
         public async Task<ProductFormModel> GetProductForEditByIdAsync(int id)
         {
-            var product = await GetProductByIdAsync(id);
+            var product = await GetProductOfTypeProductByIdAsync(id);
             if (product == null)
             {
                 throw new InvalidOperationException("Invalid product");
@@ -345,12 +271,98 @@ namespace ASNClub.Services.ProductServices
             };
             return formModel;
         }
-
-        public async Task DeleteProductByIdAsync(int id)
+        public async Task<ProductAllViewModel?> GetProductByIdAsync(int id)
         {
-            var product = await GetProductByIdAsync(id);
-            dbContext.Products.Remove(product);
+            return await dbContext.Products.Where(x=> x.Id == id)
+                .AsNoTracking()
+                .Select(p => new ProductAllViewModel
+                {
+                    Id = p.Id.ToString(),
+                    Make = p.Make,
+                    Model = p.Model,
+                    Price = p.Price,
+                    ImgUrl = p.ImgUrls.FirstOrDefault(x => x.ProductId == p.Id).ImgUrl.Url,
+                    Type = p.Type.Name,
+                    Color = p.Color.Name,
+                    IsDiscount = p.Discount.IsDiscount,
+                    DiscountRate = p.Discount.DiscountRate,
+                }).FirstOrDefaultAsync();
+        }
+        public async Task<Product> GetProductOfTypeProductByIdAsync(int id)
+        {
+            return await dbContext.Products.Include(x => x.Discount).Where(x => x.Id == id).FirstOrDefaultAsync();
+        }
+        public async Task AddRatingAsync(int id, int ratingValue, string? userId)
+        {
+            if (dbContext.Ratings.Any(x => x.UserId == Guid.Parse(userId) && x.ProductId == id))
+            {
+                throw new InvalidOperationException("Already rated");
+            }
+            var rating = new Rating()
+            {
+                ProductId = id,
+                UserId = Guid.Parse(userId),
+                RatingValue = ratingValue
+            };
+            var product = await GetProductOfTypeProductByIdAsync(id);
+            if (product == null)
+            {
+                throw new InvalidOperationException("Product doesn't exist");
+            }
+            await dbContext.Ratings.AddAsync(rating);
+            product.Ratings.Add(rating);
             await dbContext.SaveChangesAsync();
+
+        }
+        public async Task AddCommentAsync(int id, string username, string ownerId, string content)
+        {
+            var comment = new Comment()
+            {
+                Text = content,
+                PostedOn = DateTime.Now,
+                OwnerId = Guid.Parse(ownerId),
+                OwnerName = username
+            };
+            await dbContext.Comments.AddAsync(comment);
+            var product = await dbContext.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
+            product.Comments.Add(comment);
+            await dbContext.SaveChangesAsync();
+        }
+
+
+
+
+
+
+
+
+        public async Task<List<ColorProductIdViewModel>> GetAllColorsForProductAsync(string make, string model, int typeId)
+        {
+            return await dbContext.Products.Where(x => x.Make == make && x.Model == model && x.TypeId == typeId)
+                .Select(x => new ColorProductIdViewModel
+                {
+                   ColorName = x.Color.Name,
+                   ProductId = x.Id
+               }).ToListAsync();
+        }
+        public async Task<IEnumerable<string>> AllMakeNamesAsync()
+        {
+            IEnumerable<string> makes = await dbContext.Products
+               .AsNoTracking()
+               .Select(x => x.Make)
+               .Distinct()
+               .ToListAsync();
+            return makes;
+        }
+        public async Task<IEnumerable<string>> AllModelNamesAsync(string make)
+        {
+            IEnumerable<string> models = await dbContext.Products
+               .AsNoTracking()
+               .Where(x => x.Make == make)
+               .Select(x => x.Model)
+               .Distinct()
+               .ToListAsync();
+            return models;
         }
     }
 }

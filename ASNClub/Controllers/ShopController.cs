@@ -9,6 +9,8 @@ using ASNClub.Services.TypeServices.Contracts;
 using ASNClub.ViewModels.Product;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using static ASNClub.Common.NotificationMessagesConstants;
+
 
 namespace ASNClub.Controllers
 {
@@ -51,7 +53,16 @@ namespace ASNClub.Controllers
         public async Task<IActionResult> AddRating(int id, int ratingValue)
         {
             var userId = User.GetId();
-            await productService.AddRatingAsync(id,ratingValue, userId);
+            try
+            {
+                await productService.AddRatingAsync(id,ratingValue, userId);
+                TempData["SuccessMessage"] = "You successfully rated a product";
+            }
+            catch (Exception e)
+            {
+                TempData["Error"] = e.Message;
+                throw;
+            }
             return RedirectToAction("Details", new{ id = id});
         }
         public async Task<IActionResult> AddComment(int id, string username, string ownerId, string content)
@@ -60,12 +71,13 @@ namespace ASNClub.Controllers
             {
                 // You may want to handle the case where the content is null or empty.
                 // For example, you could return an error message or perform some action.
-                return BadRequest("Comment content cannot be null or empty.");
+                TempData["ErrorMesage"] = "Comment content cannot be null or empty.";
+                return RedirectToAction("Details", new { id = id });
             }
             if (content != "COMMENT_VALUE")
             {
-                
                await productService.AddCommentAsync(id,username,ownerId,content);
+                TempData["SuccessMessage"] = "You successfully added a comment to a product";
             }
             return RedirectToAction("Details", new {id = id });
         }

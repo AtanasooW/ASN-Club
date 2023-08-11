@@ -1,0 +1,49 @@
+﻿@using ASNClub.Infrastructure.Extensions;
+@using ASNClub.ViewModels.Order;
+@{
+    ViewBag.Title = "My Profile";
+}
+@model ICollection<MyOrderViewModel>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card mb-4 mb-lg-0">
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush rounded-3">
+                    <a asp-controller="Profile" asp-action="MyProfile" style="text-decoration: none">
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                        <p class="mb-0">My Profile</p>
+                        <i class="fas fa-user mx-1" style="color: black;"></i>
+                    </li>
+                    </a>
+                    <a asp-controller="Profile" asp-action="EditProfile" asp-route-id="@User.GetId()" style="text-decoration: none">
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                        <p class="mb-0">Profile settings</p>
+                        <i class="fa-solid fa-user-pen"></i>
+                    </li>
+                    </a>
+                    <a asp-controller="Order" asp-action="MyOrders" style="text-decoration: none">
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                        <p class="mb-0">My Orders</p>
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </li>
+                    </a>
+                    <a asp-controller="Profile" asp-action="AddAddress" style="text-decoration: none">
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                        <p class="mb-0">Add Address</p>
+                        <i class="fa-solid fa-plus"></i>
+                    </li>
+                    </a>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+
+            <div class="row">
+                @foreach (var order in Model)
+                {
+                <partial name="_MyOrdersPartial" model="order"></partial>
+                }
+            </div>
+    </div>
+</div>

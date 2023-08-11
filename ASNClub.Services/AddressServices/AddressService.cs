@@ -85,7 +85,7 @@ namespace ASNClub.Services.AddressServices
 
         public async Task<Address?> GetAddressTypeAddressByIdAsync(Guid id)
         {
-            return await dbContext.Addresses.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await dbContext.Addresses.Include(x=> x.Country).Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<AddressViewModel?> GetShippingAddressByIdAsync(Guid userId)

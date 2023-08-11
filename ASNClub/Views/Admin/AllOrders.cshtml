@@ -1,0 +1,14 @@
+﻿@using ASNClub.Infrastructure.Extensions;
+@using ASNClub.ViewModels.Order;
+@{
+    ViewBag.Title = "My Profile";
+}
+@model ICollection<MyOrderViewModel>
+
+<div class="row">
+
+    @foreach (var order in Model)
+    {
+        <partial name="_AllOrderPartial" model="order"></partial>
+    }
+</div>

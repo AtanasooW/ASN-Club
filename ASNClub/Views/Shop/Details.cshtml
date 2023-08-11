@@ -209,12 +209,15 @@
                     </div>
                     @if (Model.Quantity > 0)
                     {
-                        <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
                         if (SignInManager.IsSignedIn(User))
                         {
+                        <a asp-controller="ShoppingCart" asp-action="Fixer" asp-route-id="@Model.Id" asp-route-quantity="QUANTITY_HERE" class="btn btn-warning shadow-0" id="buyNowButton"> Buy now </a>
                         <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@Model.Id" asp-route-quantity="QUANTITY_HERE" id="ShoppingCartBtn" class="btn btn-primary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
                         }
-                     
+                        else
+                        {
+                        <a asp-controller="Order" asp-action="CheckoutWitoutProfile" asp-route-id="@Model.Id" asp-route-quantity="QUANTITY_HERE" id="BuyNowBtn" class="btn btn-warning shadow-0"> Buy now </a>
+                        }
                     }
                     else
                     {
@@ -295,7 +298,36 @@
             console.log(shoppingCartBtn.attr('href'));
         });
     });
+    $(document).ready(function () {
+        $('#buyNowButton').click(function (event) {
+            var quantityInput = document.getElementById('quantityText');
+            var BuyNowBtn = $('#buyNowButton');
+            var newQuantity = parseInt(quantityInput.value);
 
+            var currentHref = BuyNowBtn.attr('href');
+            var newHref = currentHref.replace("QUANTITY_HERE", encodeURIComponent(newQuantity));
+
+            BuyNowBtn.attr('asp-route-quantity', newQuantity);
+            BuyNowBtn.attr('href', newHref);
+            console.log(BuyNowBtn.attr('href'));
+        });
+    });
+
+
+    $(document).ready(function () {
+        $('#BuyNowBtn').click(function (event) {
+            var quantityInput = document.getElementById('quantityText');
+            var BuyNowBtn = $('#BuyNowBtn');
+            var newQuantity = parseInt(quantityInput.value);
+
+            var currentHref = BuyNowBtn.attr('href');
+            var newHref = currentHref.replace("QUANTITY_HERE", encodeURIComponent(newQuantity));
+
+            BuyNowBtn.attr('asp-route-quantity', newQuantity);
+            BuyNowBtn.attr('href', newHref);
+            console.log(shoppingCartBtn.attr('href'));
+        });
+    });
 
 
     $(document).ready(function () {

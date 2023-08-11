@@ -1,4 +1,4 @@
-﻿@using ASNClub.ViewModels.Product;
+﻿﻿@using ASNClub.ViewModels.Product;
 @model ProductAllViewModel
 @{
     var discountPrice = decimal.Zero;
@@ -16,20 +16,21 @@
         <div class="col-xs-12"><small>Quantity:<span class="quantity-input">@Model.QuantityFromShoppingCart</span></small></div>
         @if (Model.Color != null)
         {
-        <div class="col-xs-12"><small>Color:<span>@Model.Color</span></small></div>
+            <div class="col-xs-12"><small>Color:<span>@Model.Color</span></small></div>
         }
     </div>
     <div class="col-sm-3 col-xs-3 text-right">
         @if (Model.IsDiscount)
         {
             <span class="text-muted text-decoration-line-through h6">@Model.Price BGN</span>
+            <br /> <!-- Add a line break here -->
             <span id="price" class="h5">@discountPrice BGN</span>
         }
         else
         {
             <span id="price" class="h5">@Model.Price BGN</span>
-
         }
     </div>
 </div>
-<div class="form-group"><hr /></div>
+        <hr style="margin-top: 10px; margin-bottom: 10px;"> <!-- Add a horizontal line here -->
+

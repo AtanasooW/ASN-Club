@@ -14,10 +14,9 @@ namespace ASNClub.Data.Models.Orders
         [Key]
         public Guid Id { get; set; }
 
-        [Required]
         [ForeignKey("User")]
-        public Guid UserId { get; set; }
-        public ApplicationUser User { get; set; } = null!;
+        public Guid? UserId { get; set; }
+        public ApplicationUser User { get; set; }
 
         [Required]
         public DateTime OrderDate { get; set; }
@@ -28,16 +27,17 @@ namespace ASNClub.Data.Models.Orders
         public Address ShippingAdress { get; set; } = null!;
 
         [Required]
-        public decimal OrderTotal => ShoppingCart.ShoppingCartItems.Sum(x => x.Product.Price * x.Quantity);
+        public decimal OrderTotal { get; set; }
 
         [Required]
         [ForeignKey("OrderStatus")]
-        public Guid OrderStatusId { get; set; }
+        public int OrderStatusId { get; set; }
         public OrderStatus OrderStatus { get; set; } = null!;
 
-        [Required]
         [ForeignKey("ShoppingCart")]
-        public Guid ShoppingCartId { get; set; }
+        public Guid? ShoppingCartId { get; set; }
         public ShoppingCart ShoppingCart { get; set; } = null!;
+
+        public ICollection<OrderItem> Items { get; set;} = new HashSet<OrderItem>();
     }
 }

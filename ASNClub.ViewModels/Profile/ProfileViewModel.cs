@@ -1,4 +1,5 @@
 ﻿using ASNClub.ViewModels.Address;
+using ASNClub.ViewModels.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace ASNClub.ViewModels.Profile
         public string Email { get; set;} = null!;
         public string PhoneNumber { get; set;} = null!;
         public ICollection<AddressViewModel> Addresses { get; set; } = new HashSet<AddressViewModel>();
+        public ICollection<MyOrderViewModel> Orders { get; set; } = new HashSet<MyOrderViewModel>();
     }
 }

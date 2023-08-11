@@ -133,7 +133,8 @@ namespace ASNClub.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -162,7 +163,8 @@ namespace ASNClub.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SurnameName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -193,16 +195,19 @@ namespace ASNClub.Data.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("OrderStatusId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("OrderStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("OrderTotal")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("ShippingAdressId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ShoppingCartId")
+                    b.Property<Guid?>("ShoppingCartId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -218,11 +223,39 @@ namespace ASNClub.Data.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("ASNClub.Data.Models.Orders.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrdersItems");
+                });
+
             modelBuilder.Entity("ASNClub.Data.Models.Orders.OrderStatus", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -231,6 +264,28 @@ namespace ASNClub.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OrdersStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Status = "Awaiting approval"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Status = "Confirmed"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Status = "The order is packaged"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Status = "The order has been delivered to a courier"
+                        });
                 });
 
             modelBuilder.Entity("ASNClub.Data.Models.Orders.ShoppingCart", b =>
@@ -730,15 +785,11 @@ namespace ASNClub.Data.Migrations
 
                     b.HasOne("ASNClub.Data.Models.Orders.ShoppingCart", "ShoppingCart")
                         .WithMany()
-                        .HasForeignKey("ShoppingCartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShoppingCartId");
 
                     b.HasOne("ASNClub.Data.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("OrderStatus");
 
@@ -747,6 +798,25 @@ namespace ASNClub.Data.Migrations
                     b.Navigation("ShoppingCart");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ASNClub.Data.Models.Orders.OrderItem", b =>
+                {
+                    b.HasOne("ASNClub.Data.Models.Orders.Order", "Order")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ASNClub.Data.Models.Product.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("ASNClub.Data.Models.Orders.ShoppingCart", b =>
@@ -923,6 +993,11 @@ namespace ASNClub.Data.Migrations
             modelBuilder.Entity("ASNClub.Data.Models.ApplicationUser", b =>
                 {
                     b.Navigation("UserAddresses");
+                });
+
+            modelBuilder.Entity("ASNClub.Data.Models.Orders.Order", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("ASNClub.Data.Models.Orders.ShoppingCart", b =>
