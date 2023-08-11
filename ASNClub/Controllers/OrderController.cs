@@ -35,6 +35,7 @@ namespace ASNClub.Controllers
             try
             {
                 await orderService.PlaceOrderAsync(model);
+                return RedirectToAction("All","Shop");
             }
             catch (Exception)
             {

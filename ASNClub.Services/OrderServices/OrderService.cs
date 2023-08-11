@@ -81,11 +81,11 @@ namespace ASNClub.Services.OrderServices
             Order order = new Order()
             {
                 OrderDate = DateTime.Now,
-                OrderStatusId = 1,
-               ShippingAdressId = address.Id,
-               UserId = model.Profile.Id
 
-           }
+                ShippingAdressId = address.Id,
+                UserId = model.Profile.Id
+
+            };
         }
         private async void CompareAddreses(OrderViewModel model, Address address)
         {
