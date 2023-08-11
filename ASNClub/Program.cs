@@ -9,6 +9,8 @@ using ASNClub.Services.ColorServices;
 using ASNClub.Services.ColorServices.Contracts;
 using ASNClub.Services.CountyServices;
 using ASNClub.Services.CountyServices.Contracts;
+using ASNClub.Services.OrderServices;
+using ASNClub.Services.OrderServices.Contracts;
 using ASNClub.Services.ProductServices;
 using ASNClub.Services.ProductServices.Contracts;
 using ASNClub.Services.ProfileServices;
@@ -41,6 +43,7 @@ builder.Services.AddScoped<IProfileService,ProfileService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddSignalR();
 

@@ -1,0 +1,74 @@
+﻿@using ASNClub.Infrastructure.Extensions;
+@using ASNClub.ViewModels.Address;
+@model AddressViewModel
+@{
+    var address = Model.IsDefault == true ? "Main address" : "Address";
+}
+
+<div class="col-md-6">
+    <div class="card mb-4 mb-md-0">
+        <div class="card-body">
+            @if (address != "Main address")
+            {
+                <input type="checkbox" class="address-checkbox" data-address-id="@Model.Id" data-user-id="@User.GetId()" /><span>Use address</span>
+            }
+            <p class="mb-4">
+                <span class="text-primary font-italic me-1 h3 text-black">@address</span>
+            </p>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Country</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">@Model.Country</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">City</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">@Model.City</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Postal code</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">@Model.PostalCode</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Street1</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">@Model.Street1</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Street2</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">@Model.Street2</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Street number</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">@Model.StreetNumber</p>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+</div>

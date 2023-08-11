@@ -4,9 +4,13 @@
 @using Microsoft.AspNetCore.Identity;
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IShoppingCartService shoppingService;
-    @{
+@{
     var userId = User.GetId();
-    var total = await shoppingService.GetTotal(Guid.Parse(userId));
+    var total = "0.0";
+    if (SignInManager.IsSignedIn(User))
+    {
+        total = await shoppingService.GetTotal(Guid.Parse(userId));
+    }
 
     }
 <!DOCTYPE html>
@@ -44,13 +48,13 @@
                         @if (SignInManager.IsSignedIn(User))
                         {
                         <li class="nav-item"><a class="nav-link" style="color: rgb(255, 255, 255);" asp-controller="Profile" asp-action="MyProfile"><i class="fas fa-user mx-1"></i> Profile</a></li>
-                        }
                         <li class="nav-item">
                             <a class="nav-link" style="color: rgb(255, 255, 255);" asp-controller="ShoppingCart" asp-action="MyShoppingCart" id="ShoppigCart">
                                 <i class="fas fa-shopping-cart fa-lg" style="color: #ffffff;"></i>
                                 <span id="cartTotal">@total BGN</span>
                             </a>
                         </li>
+                        }
                     </ul>
                 </div>
             </div>

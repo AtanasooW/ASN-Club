@@ -83,6 +83,28 @@ namespace ASNClub.Services.AddressServices
                 }).FirstOrDefaultAsync();
         }
 
+        public async Task<Address?> GetAddressTypeAddressByIdAsync(Guid id)
+        {
+            return await dbContext.Addresses.Where(x => x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<AddressViewModel?> GetShippingAddressByIdAsync(Guid userId)
+        {
+            return await dbContext.UsersAddresses.Where(x => x.UserId == userId && x.Address.IsDefault)
+                .Select(x => new AddressViewModel
+                {
+                    Id = x.AddressId,
+                    IsDefault = x.Address.IsDefault,
+                    Country = x.Address.Country.Name,
+                    CountryId = x.Address.CountryId,
+                    City = x.Address.City,
+                    PostalCode = x.Address.PostalCode,
+                    Street1 = x.Address.Street1,
+                    Street2 = x.Address.Street2,
+                    StreetNumber = x.Address.StreetNumber,
+                }).FirstOrDefaultAsync();
+        }
+
         public async Task RemoveOtherIsDefaultProp(Guid userId)
         {
             var addresses = await dbContext.UsersAddresses.Where(x=> x.UserId == userId).Select(x=> x.Address).ToListAsync();
@@ -90,6 +112,18 @@ namespace ASNClub.Services.AddressServices
             {
                 address.IsDefault = false;
             }
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task SetDefaultAddressAsync(Guid addressId, Guid userId)
+        {
+            await RemoveOtherIsDefaultProp(userId);
+            var address = await dbContext.Addresses.Where(x=> x.Id == addressId).FirstOrDefaultAsync();
+            if (address == null)
+            {
+                throw new InvalidOperationException("Invalid address");
+            }
+            address.IsDefault = true;
             await dbContext.SaveChangesAsync();
         }
     }

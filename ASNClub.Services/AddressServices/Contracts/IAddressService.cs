@@ -1,4 +1,5 @@
-﻿using ASNClub.ViewModels.Address;
+﻿using ASNClub.Data.Models.AddressModels;
+using ASNClub.ViewModels.Address;
 using ASNClub.ViewModels.Profile;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,9 @@ namespace ASNClub.Services.AddressServices.Contracts
         public Task AddAddressAsync(AddressViewModel model, Guid userId);
         public Task EditAddressAsync(AddressViewModel model, Guid userId);
         public Task<AddressViewModel> GetAddressByIdAsync(Guid id);
+        public Task<Address> GetAddressTypeAddressByIdAsync(Guid id);
         public Task RemoveOtherIsDefaultProp(Guid userId);
+        public Task<AddressViewModel> GetShippingAddressByIdAsync(Guid userId);
+        public Task SetDefaultAddressAsync(Guid addressId, Guid userId);
     }
 }

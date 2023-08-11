@@ -1,0 +1,195 @@
+﻿@using ASNClub.ViewModels.Order;
+@{
+    ViewBag.Title = "Checkout";
+}
+
+@model OrderViewModel
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container wrapper">
+    <div class="row cart-head">
+        <div class="container">
+            <div class="row">
+                <p></p>
+            </div>
+            <div class="row">
+                <p h3>Finish order</p>
+            </div>
+        </div>
+    </div>
+    <div class="row cart-body">
+        <form class="form-horizontal" method="post" action="">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-push-6 col-sm-push-6">
+                <!--REVIEW ORDER-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Review Order <div class="pull-right"><small><a asp-controller="ShoppingCart" asp-action="MyShoppingCart" class="afix-1">Edit Cart</a></small></div>
+                    </div>
+
+                    <div class="panel-body">
+                        @foreach (var product in Model.Products)
+                        {
+                            <partial name="_OrderProductPartial" model="product"></partial>
+                        }
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <strong>Order Total</strong>
+                            <div class="pull-right"><span id="total" class="h4"></span></div>
+                        </div>
+                    </div>
+                </div>
+                <!--REVIEW ORDER END-->
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-pull-6 col-sm-pull-6">
+                <!--SHIPPING METHOD-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">Address</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <h4>Shipping Address</h4>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                            <label asp-for="ShippingAdress.CountryId"></label>
+                            <select asp-for="ShippingAdress.CountryId" class="form-select" id="modelSelect">
+                                @foreach (var country in Model.ShippingAdress.Countries)
+                                {
+                                    <option value="@country.Id">@country.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-xs-12">
+                                <strong>First Name:</strong>
+                                <input asp-for="Profile.FirstName" class="form-control" value="@Model.Profile.FirstName" placeholder="Ivan..." type="text" name="first_name">
+                                <span asp-validation-for="Profile.FirstName" class="small text-danger"></span>
+                            </div>
+                            <div class="span1"></div>
+                            <div class="col-md-6 col-xs-12">
+                                <strong>Last Name:</strong>
+                                <input asp-for="Profile.SurnameName" class="form-control" value="@Model.Profile.SurnameName" placeholder="Ivanov..." type="text" name="last_name">
+                                <span asp-validation-for="Profile.SurnameName" class="small text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><strong>City:</strong></div>
+                            <div class="col-md-12">
+                                <input asp-for="ShippingAdress.City" class="form-control" value="@Model.ShippingAdress.City" placeholder="Sofia..." type="text" name="city">
+                                <span asp-validation-for="ShippingAdress.City" class="small text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><strong>Street 1:</strong></div>
+                            <div class="col-md-12">
+                                <input asp-for="ShippingAdress.Street1" class="form-control" value="@Model.ShippingAdress.Street1" placeholder="Tzar Boris 3..." type="text" name="street1">
+                                <span asp-validation-for="ShippingAdress.Street1" class="small text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><strong>Street 2:</strong></div>
+                            <div class="col-md-12">
+                                <input asp-for="ShippingAdress.Street2" class="form-control" value="@Model.ShippingAdress.Street2" placeholder="..." type="text" name="street1">
+                                <span asp-validation-for="ShippingAdress.Street2" class="small text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><strong>StreetNumber:</strong></div>
+                            <div class="col-md-12">
+                                <input asp-for="ShippingAdress.StreetNumber" class="form-control" value="@Model.ShippingAdress.StreetNumber" placeholder="57..." type="text" name="street_number">
+                                <span asp-validation-for="ShippingAdress.StreetNumber" class="small text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><strong>Zip / Postal Code:</strong></div>
+                            <div class="col-md-12">
+                                <input asp-for="ShippingAdress.PostalCode" class="form-control" value="@Model.ShippingAdress.PostalCode" placeholder="2500..." type="text" name="zip_code">
+                                <span asp-validation-for="ShippingAdress.PostalCode" class="small text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><strong>Phone Number:</strong></div>
+                            <div class="col-md-12">
+                                <input asp-for="Profile.PhoneNumber" class="form-control" value="@Model.Profile.PhoneNumber" placeholder="2500..." type="text" name="phone_number">
+                                <span asp-validation-for="Profile.PhoneNumber" class="small text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><strong>Email Address:</strong></div>
+                            <div class="col-md-12">
+                                <input asp-for="Profile.Email" class="form-control" value="@Model.Profile.Email" placeholder="example@gmail.com..." type="text" name="email_address">
+                                <span asp-validation-for="Profile.Email" class="small text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <button asp-controller="Order" asp-action="PlaceOrder" type="submit" class="btn btn-primary btn-submit-fix">Place Order</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        @if (Model.Profile.Addresses != null)
+        {
+            <div class="row">
+                <partial name="_OrderAddressPartial" model="Model.Profile.Addresses.Where(x=> x.IsDefault).FirstOrDefault()"></partial>
+                @foreach (var address in Model.Profile.Addresses.Where(x => x.IsDefault == false))
+                {
+                    <partial name="_OrderAddressPartial" model="address"></partial>
+                }
+            </div>
+        }
+    </div>
+    <div class="row cart-footer">
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        function updateTotal() {
+            var totalPrice = 0;
+            $('.product').each(function () {
+                var $product = $(this);
+                var quantity = parseInt($product.find('.quantity-input').text());
+                var price = parseFloat($product.find('#price').text().replace(' BGN', ''));
+
+                totalPrice += quantity * price;
+            });
+            console.log(totalPrice)
+            document.getElementById("total").innerText = totalPrice.toFixed(2) + ' BGN';
+        }
+        $('.address-checkbox').on('change', function () {
+            var isChecked = $(this).prop('checked');
+            var addressId = $(this).data('address-id');
+            var userId = $(this).data('user-id');
+
+
+            if (isChecked) {
+                // AJAX POST request to set address as default
+                $.post('/Order/SetDefaultAddress', { addressId: addressId, userId: userId }, function (data) {
+                    // Handle the response if needed
+                    if (data.success) {
+                        // Reload the page after the request is successful
+                        location.reload();
+                    }
+                });
+            }
+        });
+        updateTotal()
+    })
+
+
+
+</script>
+
+</script>

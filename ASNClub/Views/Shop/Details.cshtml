@@ -210,7 +210,10 @@
                     @if (Model.Quantity > 0)
                     {
                         <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
+                        if (SignInManager.IsSignedIn(User))
+                        {
                         <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@Model.Id" asp-route-quantity="QUANTITY_HERE" id="ShoppingCartBtn" class="btn btn-primary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
+                        }
                      
                     }
                     else

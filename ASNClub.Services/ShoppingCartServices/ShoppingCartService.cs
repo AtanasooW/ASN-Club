@@ -4,6 +4,7 @@ using ASNClub.Data.Models.Product;
 using ASNClub.Services.ProductServices.Contracts;
 using ASNClub.Services.ShoppingCartServices.Contracts;
 using ASNClub.ViewModels.Discount;
+using ASNClub.ViewModels.Product;
 using ASNClub.ViewModels.ShoppingCart;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -67,6 +68,30 @@ namespace ASNClub.Services.ShoppingCartServices
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task<ICollection<ProductAllViewModel>> GetAllProductsFromShoppingCartAsync(Guid userId)
+        {
+            return await dbContext.ShoppingCartItems
+                .Include(x => x.ShoppingCart)
+                .Include(x => x.Product)
+                .ThenInclude(x => x.Discount)
+                .Where(x => x.ShoppingCart.UserId == userId)
+                .AsNoTracking()
+                .Select(p => new ProductAllViewModel
+                {
+                    Id = p.Product.Id.ToString(),
+                    Make = p.Product.Make,
+                    Model = p.Product.Model,
+                    Price = p.Product.Price,
+                    ImgUrl = p.Product.ImgUrls.FirstOrDefault(x => x.ProductId == p.Product.Id).ImgUrl.Url,
+                    Type = p.Product.Type.Name,
+                    Color = p.Product.Color.Name,
+                    IsDiscount = p.Product.Discount.IsDiscount,
+                    DiscountRate = p.Product.Discount.DiscountRate,
+                    QuantityFromShoppingCart = p.Quantity
+
+                }).ToListAsync();
+        }
+
         public async Task<ShoppingCartViewModel?> GetShoppingCartByUserIdAsync(Guid userId)
         {
             return await dbContext.ShoppingCarts.Include(x => x.ShoppingCartItems)
@@ -99,8 +124,6 @@ namespace ASNClub.Services.ShoppingCartServices
                     }).ToList()
                 }).FirstOrDefaultAsync();
         }
-
-
         public async Task<string> GetTotal(Guid userId)
         {
             var shoppingCart = await dbContext.ShoppingCarts

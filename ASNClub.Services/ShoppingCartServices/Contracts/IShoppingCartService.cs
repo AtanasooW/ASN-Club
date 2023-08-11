@@ -1,4 +1,5 @@
-﻿using ASNClub.ViewModels.ShoppingCart;
+﻿using ASNClub.ViewModels.Product;
+using ASNClub.ViewModels.ShoppingCart;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace ASNClub.Services.ShoppingCartServices.Contracts
         public Task RemoveProductFromCartAsync(int id, int shoppingCartId, Guid userId);
         public Task<string> GetTotal(Guid userId);
         public Task UpdateProductQuantityAsync(int shoppingCartItemId, int newQuantity);
+        public Task<ICollection<ProductAllViewModel>> GetAllProductsFromShoppingCartAsync(Guid userId);
     }
 }

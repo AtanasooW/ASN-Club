@@ -20,5 +20,6 @@ namespace ASNClub.ViewModels.Product
         public string? Color { get; set; }
         public bool IsDiscount { get; set; }
         public double? DiscountRate { get; set; }
+        public int? QuantityFromShoppingCart { get;set; }
     }
 }
