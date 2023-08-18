@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using static ASNClub.Common.NotificationMessagesConstants;
+using static ASNClub.Infrastructure.Extensions.ModelExtensions;
 
 
 namespace ASNClub.Controllers
@@ -46,9 +47,13 @@ namespace ASNClub.Controllers
             }
             return this.View(queryModel);
         }
-        public async Task<IActionResult> Details (int id)
+        public async Task<IActionResult> Details (int id,string information)
         {
             var model = await productService.GetProductDetailsByIdAsync(id);
+            if (information != model.GetInformation())
+            {
+                return RedirectToAction("BadRequest", "Error");
+            }
             return this.View(model);
         }
         public async Task<IActionResult> AddRating(int id, int ratingValue)

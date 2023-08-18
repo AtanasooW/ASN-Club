@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ASNClub.ViewModels.Product.Contracts;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ASNClub.ViewModels.Product
 {
-    public class ProductAllViewModel
+    public class ProductAllViewModel : IProductModel
     {
         public string Id { get; set; } = null!;
         public string Make { get; set; } = null!;

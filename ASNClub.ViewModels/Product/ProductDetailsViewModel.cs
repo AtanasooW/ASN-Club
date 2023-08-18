@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using ASNClub.ViewModels.Discount;
 using ASNClub.ViewModels.Comment;
 using ASNClub.ViewModels.Color;
+using ASNClub.ViewModels.Product.Contracts;
 
 namespace ASNClub.ViewModels.Product
 {
-    public class ProductDetailsViewModel
+    public class ProductDetailsViewModel : IProductModel
     {
         public ProductDetailsViewModel()
         {

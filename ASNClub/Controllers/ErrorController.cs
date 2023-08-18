@@ -15,5 +15,10 @@ namespace ASNClub.Controllers
             Response.StatusCode = 500;
             return View();
         }
+        public IActionResult BadRequest()
+        {
+            Response.StatusCode = 400;
+            return View();
+        }
     }
 }

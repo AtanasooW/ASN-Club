@@ -1,5 +1,6 @@
 ﻿@using ASNClub.ViewModels.Product;
 @model ProductAllViewModel
+@using static ASNClub.Infrastructure.Extensions.ModelExtensions
 @{
     var discountPrice = decimal.Zero;
     if (Model.IsDiscount)
@@ -50,7 +51,12 @@
         </div>
         <!-- Product actions-->
         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-            <div class="text-center"><a asp-controller="Shop" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-dark mt-auto">View details</a></div>
+            <div class="text-center">
+                <a asp-controller="Shop" 
+                asp-action="Details"
+                asp-route-id="@Model.Id" 
+                asp-route-information="@Model.GetInformation()" class="btn btn-outline-dark mt-auto">View details</a>
+            </div>
         </div>
     </div>
 </div>

@@ -20,6 +20,7 @@ using ASNClub.Services.ShoppingCartServices.Contracts;
 using ASNClub.Services.TypeServices;
 using ASNClub.Services.TypeServices.Contracts;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,7 +48,10 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddSignalR();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+});
 
 var app = builder.Build();
 
@@ -64,15 +68,20 @@ else
 }
 app.Use(async (context, next) =>
 {
+    await next();
     if (context.Response.StatusCode == 500)
     {
         context.Request.Path = "/Error/InternalServerError";
         await next();
     }
-    await next();
     if (context.Response.StatusCode == 404)
     {
         context.Request.Path = "/Error/NotFound";
+        await next();
+    }
+    if (context.Response.StatusCode == 400)
+    {
+        context.Request.Path = "/Error/BadRequest";
         await next();
     }
 });
@@ -87,6 +96,18 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "Shop Details",
+        pattern: "/Shop/Details/{id}/{information}",
+        defaults: new { Controller = "Shop", Action = "Details" });
+
+    endpoints.MapDefaultControllerRoute();
+    endpoints.MapRazorPages();
+});
+
 app.MapRazorPages();
 app.MapHub<CommentsHub>("/commentsHub");
 app.Run();
