@@ -1,4 +1,5 @@
-﻿using ASNClub.ViewModels.Profile;
+﻿using ASNClub.Data.Models;
+using ASNClub.ViewModels.Profile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace ASNClub.Services.ProfileServices.Contracts
     {
         public Task EditProfileAsync(ProfileFormModel model);
         public Task<ProfileViewModel> GetProfileByIdAsync(Guid id);
+        public Task<ApplicationUser> GetProfileOfTypeProfileByIdAsync(Guid id);
         public Task<ProfileFormModel> GetProfileByIdForEditAsync(Guid id);
     }
 }

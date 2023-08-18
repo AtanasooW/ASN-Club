@@ -1,4 +1,5 @@
 ﻿using ASNClub.Data;
+using ASNClub.Data.Models;
 using ASNClub.Data.Models.Product;
 using ASNClub.Services.ProfileServices.Contracts;
 using ASNClub.ViewModels.Address;
@@ -70,6 +71,10 @@ namespace ASNClub.Services.ProfileServices
                 Email = x.Email,
                 PhoneNumber = x.PhoneNumber
             }).FirstOrDefaultAsync();
+        }
+        public async Task<ApplicationUser?> GetProfileOfTypeProfileByIdAsync(Guid id)
+        {
+            return await dbContext.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
     }
 }

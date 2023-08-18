@@ -1,10 +1,12 @@
 ﻿using ASNClub.Data;
+using ASNClub.Data.Models;
 using ASNClub.Data.Models.AddressModels;
 using ASNClub.Data.Models.Orders;
 using ASNClub.Services.AddressServices.Contracts;
 using ASNClub.Services.CountyServices;
 using ASNClub.Services.CountyServices.Contracts;
 using ASNClub.Services.OrderServices.Contracts;
+using ASNClub.Services.ProfileServices.Contracts;
 using ASNClub.Services.ShoppingCartServices.Contracts;
 using ASNClub.ViewModels.Address;
 using ASNClub.ViewModels.Order;
@@ -26,12 +28,18 @@ namespace ASNClub.Services.OrderServices
         private readonly ICountryService countryService;
         private readonly IShoppingCartService shoppingCartService;
         private readonly IAddressService addressService;
-        public OrderService(ASNClubDbContext _dbContext, ICountryService _countryService, IShoppingCartService _shoppingCartService, IAddressService _addressService)
+        private readonly IProfileService profileService;
+        public OrderService(ASNClubDbContext _dbContext,
+            ICountryService _countryService,
+            IShoppingCartService _shoppingCartService,
+            IAddressService _addressService,
+            IProfileService _profileService)
         {
             dbContext = _dbContext;
             countryService = _countryService;
             shoppingCartService = _shoppingCartService;
             addressService = _addressService;
+            profileService = _profileService;
         }
 
 
@@ -138,6 +146,10 @@ namespace ASNClub.Services.OrderServices
                 }).FirstOrDefaultAsync();
             if (order != null)
             {
+                if (order.ShippingAdress == null)
+                {
+                    order.ShippingAdress = new AddressViewModel();
+                }
                 order.ShippingAdress.Countries = await countryService.GetCountryNamesAsync();
                 order.Products = await shoppingCartService.GetAllProductsFromShoppingCartAsync(userId);
             }
@@ -184,7 +196,9 @@ namespace ASNClub.Services.OrderServices
                 {
                     throw new InvalidOperationException("No items in the cart");
                 }
-                CompareAddreses(model, address);
+                var profile = await profileService.GetProfileOfTypeProfileByIdAsync(model.Profile.Id);
+                CompareAddreses(model, address,profile);
+                CompareProfileInfo(model, profile);
 
                 order.OrderDate = DateTime.Now;
                 order.OrderStatusId = 1;
@@ -217,8 +231,37 @@ namespace ASNClub.Services.OrderServices
             }
             await dbContext.SaveChangesAsync();
         }
-        private async void CompareAddreses(OrderViewModel model, Address address)
+
+        private async void CompareProfileInfo(OrderViewModel model, ApplicationUser profile)
         {
+           
+            if (model.Profile.FirstName != profile.FirstName)
+            {
+                profile.FirstName = model.Profile.FirstName;
+            }
+            if (model.Profile.Surname != profile.Surname)
+            {
+                profile.Surname = model.Profile.Surname;
+            }
+            if (model.Profile.PhoneNumber != profile.PhoneNumber)
+            {
+                profile.PhoneNumber = model.Profile.PhoneNumber;
+            }
+            if (model.Profile.Email != profile.Email)
+            {
+                profile.Email = model.Profile.Email;
+            }
+            await dbContext.SaveChangesAsync();
+        }
+
+        private async void CompareAddreses(OrderViewModel model, Address address, ApplicationUser profile)
+        {
+            if (address == null)
+            {
+                CreateAddressAsync(model,profile);
+                return;
+
+            }
             if (model.ShippingAdress.CountryId != address.Country.Id)
             {
                 address.Country.Name = model.ShippingAdress.Country;
@@ -243,6 +286,31 @@ namespace ASNClub.Services.OrderServices
             {
                 address.PostalCode = model.ShippingAdress.PostalCode;
             }
+            await dbContext.SaveChangesAsync();
+        }
+
+        private async void CreateAddressAsync(OrderViewModel model, ApplicationUser profile)
+        {
+            Address address = new Address()
+            {
+                CountryId = model.ShippingAdress.CountryId,
+                City = model.ShippingAdress.City,
+                PostalCode = model.ShippingAdress.PostalCode,
+                Street1 = model.ShippingAdress.Street1,
+                Street2 = model.ShippingAdress.Street2,
+                StreetNumber = model.ShippingAdress.StreetNumber,
+                IsDefault = true,
+            };
+            await dbContext.Addresses.AddAsync(address);
+            await dbContext.SaveChangesAsync();
+
+            UserAddress userAddress = new UserAddress()
+            {
+                AddressId = address.Id,
+                UserId = profile.Id
+            };
+            await dbContext.UsersAddresses.AddAsync(userAddress);
+            profile.UserAddresses.Add(userAddress);
             await dbContext.SaveChangesAsync();
         }
 

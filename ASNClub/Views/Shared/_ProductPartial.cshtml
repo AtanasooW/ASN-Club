@@ -40,11 +40,11 @@
                 @if (Model.IsDiscount)
                 {
                     <span class="text-muted text-decoration-line-through">@Model.Price BGN</span>
-                    <div>@discountPrice BGN</div>
+                    <div>@discountPrice.ToString("F2") BGN</div>
                 }
                 else
                 {
-                    <div>@Model.Price BGN</div>
+                    <div>@Model.Price.ToString("F2") BGN</div>
                 }
             </div>
         </div>

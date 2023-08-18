@@ -37,11 +37,11 @@
             @if (Model.IsDiscount)
             {
                 <span class="text-muted text-decoration-line-through h6">@Model.Price BGN</span>
-                <strong class="h5" id="price">@discountPrice BGN</strong>
+                <strong class="h5" id="price">@discountPrice.ToString("F2") BGN</strong>
             }
             else
             {
-                <strong class="h5" id="price">@Model.Price BGN</strong>
+                <strong class="h5" id="price">@Model.Price.ToString("F2") BGN</strong>
 
             }
         </p>

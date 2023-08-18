@@ -148,11 +148,11 @@
                         @if (Model.Discount.IsDiscount)
                         {
                             <span class="text-muted text-decoration-line-through h6">@Model.Price BGN</span>
-                            <span class="h5">@discountPrice BGN</span>
+                            <span class="h5">@discountPrice.ToString("F2") BGN</span>
                         }
                         else
                         {
-                            <span class="h5">@Model.Price BGN</span>
+                            <span class="h5">@Model.Price.ToString("F2") BGN</span>
                             
                         }
                     </div>
@@ -201,6 +201,7 @@
                                     <i class="fas fa-minus"></i>
                                 </button>
                                 <input id="quantityText" type="text" class="form-control text-center border border-secondary" value="1" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+                                <input id="quantityHelper" style="display:none" value="@Model.Quantity"/>
                                 <button class="button border border-secondary px-3" type="button" id="button-addon2" data-mdb-ripple-color="dark" onclick="plusOneQuantity()">
                                     <i class="fas fa-plus"></i>
                                 </button>
@@ -364,6 +365,7 @@
         largeImageAnchor.href = clickedImage.src;
         $(largeImage).data('zoom-image', clickedImage.dataset.zoomImage).elevateZoom();
     }
+    }
     function minusOneQuantity() {
         var text = document.getElementById("quantityText");
         var quantity = parseInt(text.value);
@@ -373,8 +375,12 @@
         text.value = quantity - 1;
     }
     function plusOneQuantity() {
-        var text = document.getElementById("quantityText");
-        var quantity = parseInt(text.value);
-        text.value = quantity + 1;
+        var text = $("#quantityText"); 
+        var maxQuantity = parseInt($("#quantityHelper").val());
+        var currentValue = parseInt(text.val()); 
+        if (currentValue < maxQuantity) {
+            text.val(currentValue + 1);
+        }
     }
+
 </script>

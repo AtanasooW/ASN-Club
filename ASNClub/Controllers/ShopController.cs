@@ -62,7 +62,7 @@ namespace ASNClub.Controllers
             catch (Exception e)
             {
                 TempData["Error"] = e.Message;
-                throw;
+                return RedirectToAction("InternalServerError", "Error");
             }
             return RedirectToAction("Details", new{ id = id});
         }
